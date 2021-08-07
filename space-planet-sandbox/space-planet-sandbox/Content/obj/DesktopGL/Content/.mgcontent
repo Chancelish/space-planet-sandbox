@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/Chance/Documents/Programs/space-planet-sandbox/space-planet-sandbox/space-planet-sandbox/Content/morshu.png</File>
+    <File>C:/Users/Chance/Documents/Programs/space-planet-sandbox/space-planet-sandbox/space-planet-sandbox/Content/unknown.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
