@@ -1,2 +1,9 @@
 .vs
 *.logs
+*/runtime/*
+*.exe
+*.dll
+*.pdb
+*.catch
+*/bin/*
+*/Debug/*
