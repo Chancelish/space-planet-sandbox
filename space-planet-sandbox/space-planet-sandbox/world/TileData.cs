@@ -10,7 +10,7 @@ namespace space_planet_sandbox.world
         double tileDurability; // the total durability of the tile
         double tileToughness; // mining power required to deplete durability
         string tileName; // the texture group to pull from
-        string tag; // for now, ore, environment, or constructed
+        string[] tags; // for now, ore, environment, crumble, or constructed
         bool richDrop; // true drop 3 blocks instead of one (ores only)
     }
 }

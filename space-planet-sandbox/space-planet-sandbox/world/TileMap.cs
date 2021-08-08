@@ -26,6 +26,19 @@ namespace space_planet_sandbox.world
             }
         }
 
+        public void Update(int x, int y)
+        {
+            int xTile = x / 16;
+            int yTile = y / 16;
+            if (tileData[xTile, yTile] == 1)
+            {
+                tileData[xTile, yTile] = 0;
+            }
+            else
+            {
+                tileData[xTile, yTile] = 1;
+            }
+        }
         public void Render(SpriteBatch _graphics)
         {
             for (int x = 0; x < tileWidth; x++)
