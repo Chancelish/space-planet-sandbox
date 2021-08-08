@@ -20,6 +20,12 @@ namespace space_planet_sandbox
         Vector2 characterPosition;
         float speed;
 
+        private ButtonState leftMouseLast = ButtonState.Released;
+        private ButtonState leftMouseCurrent = ButtonState.Released;
+
+        private ButtonState rightMouseLast = ButtonState.Released;
+        private ButtonState rightMouseCurrent = ButtonState.Released;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -74,9 +80,19 @@ _graphics.PreferredBackBufferHeight / 2);
             if (kstate.IsKeyDown(Keys.Right))
                 characterPosition.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            base.Update(gameTime);
+            var mouseState = Mouse.GetState();
+            leftMouseCurrent = mouseState.LeftButton;
+            rightMouseCurrent = mouseState.RightButton;
+
+            var leftMouseClicked = leftMouseCurrent == ButtonState.Pressed && leftMouseLast == ButtonState.Released;
+           if (leftMouseClicked)
+            {
+                tileMap.Update(mouseState.X, mouseState.Y);
+            }
 
             base.Update(gameTime);
+            leftMouseLast = leftMouseCurrent;
+            rightMouseLast = rightMouseCurrent;
         }
 
         protected override void Draw(GameTime gameTime)
