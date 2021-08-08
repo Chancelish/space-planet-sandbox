@@ -40,7 +40,7 @@ namespace space_planet_sandbox
 _graphics.PreferredBackBufferHeight / 2);
             speed = 100.0f;
 
-            tileMap = new TileMap(120, 60);
+            tileMap = new TileMap(60, 30);
 
             base.Initialize();
         }

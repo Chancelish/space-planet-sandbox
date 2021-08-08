@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace space_planet_sandbox.world
 {
@@ -8,20 +9,34 @@ namespace space_planet_sandbox.world
     {
         private int tileWidth;
         private int tileHeight;
-        private int[,] tileData;
+        private TileData[,] tileData;
 
         public TileMap(int _width, int _height)
         {
             tileWidth = _width;
             tileHeight = _height;
-            tileData = new int[_width, _height];
+            tileData = new TileData[_width, _height];
 
             Random tileChooser = new Random();
             for (int x = 0; x < _width; x++)
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    tileData[x,y] = tileChooser.Next(0, 4);
+                    if (y < 20)
+                    {
+                        tileData[x, y].tileName = "empty";
+                        tileData[x, y].tags = new List<String>();
+                    }
+                    else if (y == 20)
+                    {
+                        tileData[x, y].tileName = "ground_tiles_and_plants";
+                        tileData[x, y].tileIndex = 1;
+                    }
+                    else
+                    {
+                        tileData[x, y].tileName = "ground_tiles_and_plants";
+                        tileData[x, y].tileIndex = 3;
+                    }
                 }
             }
         }
@@ -30,13 +45,13 @@ namespace space_planet_sandbox.world
         {
             int xTile = x / 16;
             int yTile = y / 16;
-            if (tileData[xTile, yTile] == 1)
+            if (tileData[xTile, yTile].tileName.Equals("empty"))
             {
-                tileData[xTile, yTile] = 0;
+                tileData[xTile, yTile].tileName = "ground_tiles_and_plants"; 
             }
             else
             {
-                tileData[xTile, yTile] = 1;
+                tileData[xTile, yTile].tileName = "empty";
             }
         }
         public void Render(SpriteBatch _graphics)
@@ -45,11 +60,11 @@ namespace space_planet_sandbox.world
             {
                 for (int y = 0; y < tileHeight; y++)
                 {
-                    if (tileData[x,y] == 1)
+                    if (!tileData[x,y].tileName.Equals("empty"))
                     {
-                        _graphics.Draw(Game1.loadedTextures["ground_tiles_and_plants"],
+                        _graphics.Draw(Game1.loadedTextures[tileData[x,y].tileName],
                             new Rectangle(x * 16, y * 16, 16, 16),
-                            new Rectangle(0, 0, 16, 16),
+                            new Rectangle(tileData[x, y].tileIndex * 16, 0, 16, 16),
                             Color.White);
                     }
                 }
