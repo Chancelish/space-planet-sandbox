@@ -1,16 +1,22 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+
+using space_planet_sandbox.world;
 
 namespace space_planet_sandbox
 {
     public class Game1 : Game
     {
+        public static Dictionary<string, Texture2D> loadedTextures = new Dictionary<string, Texture2D>();
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
         private Texture2D gorilla;
         private Texture2D character;
+        private TileMap tileMap;
         Vector2 characterPosition;
         float speed;
 
@@ -28,6 +34,8 @@ namespace space_planet_sandbox
 _graphics.PreferredBackBufferHeight / 2);
             speed = 100.0f;
 
+            tileMap = new TileMap(120, 60);
+
             base.Initialize();
         }
 
@@ -38,6 +46,12 @@ _graphics.PreferredBackBufferHeight / 2);
             // TODO: use this.Content to load your game content here
             gorilla = Content.Load<Texture2D>("morshu");
             character = Content.Load<Texture2D>("unknown");
+            LoadTexture("ground_tiles_and_plants");
+        }
+
+        private void LoadTexture(string textureName)
+        {
+            Game1.loadedTextures.Add(textureName, Content.Load<Texture2D>(textureName));
         }
 
         protected override void Update(GameTime gameTime)
@@ -70,6 +84,7 @@ _graphics.PreferredBackBufferHeight / 2);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
             _spriteBatch.Draw(gorilla, new Vector2(0, 0), Color.White);
+            tileMap.Render(_spriteBatch);
             _spriteBatch.Draw(character,
                 characterPosition,
                 null,
