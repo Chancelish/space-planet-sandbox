@@ -5,22 +5,22 @@ using System.Collections.Generic;
 
 namespace space_planet_sandbox.world
 {
-    class TileMap
+    public class TileMap
     {
         private int tileWidth;
         private int tileHeight;
         private TileData[,] tileData;
 
-        public TileMap(int _width, int _height)
+        public TileMap(int width, int height)
         {
-            tileWidth = _width;
-            tileHeight = _height;
-            tileData = new TileData[_width, _height];
+            tileWidth = width;
+            tileHeight = height;
+            tileData = new TileData[width, height];
 
             Random tileChooser = new Random();
-            for (int x = 0; x < _width; x++)
+            for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < _height; y++)
+                for (int y = 0; y < height; y++)
                 {
                     if (y < 20)
                     {
@@ -54,7 +54,7 @@ namespace space_planet_sandbox.world
                 tileData[xTile, yTile].tileName = "empty";
             }
         }
-        public void Render(SpriteBatch _graphics)
+        public void Render(SpriteBatch graphics)
         {
             for (int x = 0; x < tileWidth; x++)
             {
@@ -62,7 +62,7 @@ namespace space_planet_sandbox.world
                 {
                     if (!tileData[x,y].tileName.Equals("empty"))
                     {
-                        _graphics.Draw(Game1.loadedTextures[tileData[x,y].tileName],
+                        graphics.Draw(Game1.loadedTextures[tileData[x,y].tileName],
                             new Rectangle(x * 16, y * 16, 16, 16),
                             new Rectangle(tileData[x, y].tileIndex * 16, 0, 16, 16),
                             Color.White);

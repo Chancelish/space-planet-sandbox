@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 using space_planet_sandbox.world;
+using space_planet_sandbox.entities.player;
 
 namespace space_planet_sandbox
 {
@@ -15,10 +16,9 @@ namespace space_planet_sandbox
         private SpriteBatch _spriteBatch;
 
         private Texture2D gorilla;
-        private Texture2D character;
-        private TileMap tileMap;
-        Vector2 characterPosition;
-        float speed;
+        public TileMap tileMap;
+
+        private PlayerCharacter character;
 
         private ButtonState leftMouseLast = ButtonState.Released;
         private ButtonState leftMouseCurrent = ButtonState.Released;
@@ -36,11 +36,8 @@ namespace space_planet_sandbox
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            characterPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2,
-_graphics.PreferredBackBufferHeight / 2);
-            speed = 100.0f;
-
             tileMap = new TileMap(60, 30);
+            character = new PlayerCharacter(50, 50);
 
             base.Initialize();
         }
@@ -51,7 +48,7 @@ _graphics.PreferredBackBufferHeight / 2);
 
             // TODO: use this.Content to load your game content here
             gorilla = Content.Load<Texture2D>("morshu");
-            character = Content.Load<Texture2D>("unknown");
+            LoadTexture("unknown");
             LoadTexture("ground_tiles_and_plants");
         }
 
@@ -64,21 +61,6 @@ _graphics.PreferredBackBufferHeight / 2);
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
-            var kstate = Keyboard.GetState();
-
-            if (kstate.IsKeyDown(Keys.Up))
-                characterPosition.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (kstate.IsKeyDown(Keys.Down))
-                characterPosition.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (kstate.IsKeyDown(Keys.Left))
-                characterPosition.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (kstate.IsKeyDown(Keys.Right))
-                characterPosition.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             var mouseState = Mouse.GetState();
             leftMouseCurrent = mouseState.LeftButton;
@@ -101,15 +83,7 @@ _graphics.PreferredBackBufferHeight / 2);
             _spriteBatch.Begin();
             _spriteBatch.Draw(gorilla, new Vector2(0, 0), Color.White);
             tileMap.Render(_spriteBatch);
-            _spriteBatch.Draw(character,
-                characterPosition,
-                null,
-                Color.White,
-                0f,
-                new Vector2(character.Width / 2, character.Height / 2),
-                Vector2.One,
-                SpriteEffects.None,
-                0f);
+            
             _spriteBatch.End();
 
             // TODO: Add your drawing code here

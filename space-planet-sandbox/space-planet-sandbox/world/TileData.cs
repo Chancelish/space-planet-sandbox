@@ -4,7 +4,7 @@ using System.Text;
 
 namespace space_planet_sandbox.world
 {
-    struct TileData
+    public struct TileData
     {
         public int tileIndex; // the tile in the tileset to draw, if index is somehow larger than the tilesheet, should draw tile
         public double maxDurability; // the total durability of the tile
