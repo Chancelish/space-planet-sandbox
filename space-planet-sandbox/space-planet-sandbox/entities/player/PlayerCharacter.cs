@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using space_planet_sandbox.collisiondetection;
 using Microsoft.Xna.Framework.Input;
+using space_planet_sandbox.world;
 
 namespace space_planet_sandbox.entities.player
 {
@@ -16,18 +17,18 @@ namespace space_planet_sandbox.entities.player
         {
             hurtBox = new Rectangle(startX, startY, 16, 32);
             location = new Vector2(startX, startY);
-            sprite = Game1.loadedTextures["unknown"];
         }
-        public Rectangle BoundingBox()
+        public override Rectangle BoundingBox()
         {
             return hurtBox;
         }
 
-        public void Update(GameTime time)
+        public void Update(GameTime time, TileMap world)
         {
             var kstate = Keyboard.GetState();
             float deltaY = 0;
             float deltaX = 0;
+            sprite = Game1.loadedTextures["unknown"];
 
             if (kstate.IsKeyDown(Keys.Up))
                 deltaY -= speed * (float)time.ElapsedGameTime.TotalSeconds;
@@ -41,7 +42,14 @@ namespace space_planet_sandbox.entities.player
             if (kstate.IsKeyDown(Keys.Right))
                 deltaX += speed * (float)time.ElapsedGameTime.TotalSeconds;
 
+            if (((IHitBox)this).Collide(world, (int) deltaX, (int) deltaY))
+            {
+                deltaX = 0; deltaY = 0;
+            }
 
+            location.X += deltaX;
+            location.Y += deltaY;
+            hurtBox.Location = location.ToPoint();
         }
 
         public void Render(SpriteBatch graphics)

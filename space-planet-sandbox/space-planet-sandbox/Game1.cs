@@ -16,7 +16,7 @@ namespace space_planet_sandbox
         private SpriteBatch _spriteBatch;
 
         private Texture2D gorilla;
-        public TileMap tileMap;
+        private TileMap tileMap;
 
         private PlayerCharacter character;
 
@@ -62,6 +62,8 @@ namespace space_planet_sandbox
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            character.Update(gameTime, tileMap);
+
             var mouseState = Mouse.GetState();
             leftMouseCurrent = mouseState.LeftButton;
             rightMouseCurrent = mouseState.RightButton;
@@ -83,7 +85,7 @@ namespace space_planet_sandbox
             _spriteBatch.Begin();
             _spriteBatch.Draw(gorilla, new Vector2(0, 0), Color.White);
             tileMap.Render(_spriteBatch);
-            
+            character.Render(_spriteBatch);
             _spriteBatch.End();
 
             // TODO: Add your drawing code here
