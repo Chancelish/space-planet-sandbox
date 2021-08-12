@@ -3,22 +3,23 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using space_planet_sandbox.collisiondetection;
+using space_planet_sandbox.entities;
 
 namespace space_planet_sandbox.world
 {
-    public class TileMap : IGridMask
+    public class TileMap : CollidableEntity
     {
         private int tileWidth;
         private int tileHeight;
         private TileData[,] tileData;
-        private CollisionGrid grid;
+        private GridMask grid;
 
         public TileMap(int width, int height)
         {
             tileWidth = width;
             tileHeight = height;
             tileData = new TileData[width, height];
-            grid = new CollisionGrid(16, width, height, 0, 0);
+            grid = new GridMask(16, width, height, 0, 0);
 
             Random tileChooser = new Random();
             for (int x = 0; x < width; x++)
@@ -34,13 +35,13 @@ namespace space_planet_sandbox.world
                     {
                         tileData[x, y].tileName = "ground_tiles_and_plants";
                         tileData[x, y].tileIndex = 1;
-                        grid.solidTiles[x, y] = 1;
+                        grid.ChangeTile(x, y, 1);
                     }
                     else
                     {
                         tileData[x, y].tileName = "ground_tiles_and_plants";
                         tileData[x, y].tileIndex = 3;
-                        grid.solidTiles[x, y] = 1;
+                        grid.ChangeTile(x, y, 1);
                     }
                 }
             }
@@ -53,12 +54,12 @@ namespace space_planet_sandbox.world
             if (tileData[xTile, yTile].tileName.Equals("empty"))
             {
                 tileData[xTile, yTile].tileName = "ground_tiles_and_plants";
-                grid.solidTiles[xTile, yTile] = 1;
+                grid.ChangeTile(xTile, yTile, 1);
             }
             else
             {
                 tileData[xTile, yTile].tileName = "empty";
-                grid.solidTiles[xTile, yTile] = 0;
+                grid.ChangeTile(xTile, yTile, 0);
             }
         }
         public void Render(SpriteBatch graphics)
@@ -78,7 +79,7 @@ namespace space_planet_sandbox.world
             }
         }
 
-        public override CollisionGrid GetCollisionGrid()
+        public override ICollisionMask GetCollisionMask()
         {
             return grid;
         }

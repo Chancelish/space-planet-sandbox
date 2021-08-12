@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using space_planet_sandbox.collisiondetection;
 using Microsoft.Xna.Framework.Input;
@@ -6,19 +7,21 @@ using space_planet_sandbox.world;
 
 namespace space_planet_sandbox.entities.player
 {
-    class PlayerCharacter : IHitBox
+    class PlayerCharacter : CollidableEntity
     {
-        private Rectangle hurtBox;
-        private Vector2 location;
+        private HitBox hurtBox;
+        private double X;
+        private double Y;
         private float speed = 100.0f;
         private Texture2D sprite;
 
         public PlayerCharacter(int startX, int startY)
         {
-            hurtBox = new Rectangle(startX, startY, 16, 32);
-            location = new Vector2(startX, startY);
+            hurtBox = new HitBox(startX, startY, 16, 32);
+            X = startX;
+            Y = startY;
         }
-        public override Rectangle BoundingBox()
+        public override ICollisionMask GetCollisionMask()
         {
             return hurtBox;
         }
@@ -26,40 +29,43 @@ namespace space_planet_sandbox.entities.player
         public void Update(GameTime time, TileMap world)
         {
             var kstate = Keyboard.GetState();
-            float deltaY = 0;
-            float deltaX = 0;
+            double deltaY = 0;
+            double deltaX = 0;
             sprite = Game1.loadedTextures["unknown"];
 
             if (kstate.IsKeyDown(Keys.Up))
-                deltaY -= speed * (float)time.ElapsedGameTime.TotalSeconds;
+                deltaY -= speed * time.ElapsedGameTime.TotalSeconds;
 
             if (kstate.IsKeyDown(Keys.Down))
-                deltaY += speed * (float)time.ElapsedGameTime.TotalSeconds;
+                deltaY += speed * time.ElapsedGameTime.TotalSeconds;
 
             if (kstate.IsKeyDown(Keys.Left))
-                deltaX -= speed * (float)time.ElapsedGameTime.TotalSeconds;
+                deltaX -= speed * time.ElapsedGameTime.TotalSeconds;
 
             if (kstate.IsKeyDown(Keys.Right))
-                deltaX += speed * (float)time.ElapsedGameTime.TotalSeconds;
+                deltaX += speed * time.ElapsedGameTime.TotalSeconds;
 
-            if (((IHitBox)this).Collide(world, (int) deltaX, (int) deltaY))
+            int xCheck = (int) (deltaX > 0 ? Math.Ceiling(deltaX) : Math.Floor(deltaX));
+            int yCheck = (int) (deltaY > 0 ? Math.Ceiling(deltaY) : Math.Floor(deltaY));
+
+            if (Collide(world, xCheck, yCheck))
             {
                 deltaX = 0; deltaY = 0;
             }
 
-            location.X += deltaX;
-            location.Y += deltaY;
-            hurtBox.Location = location.ToPoint();
+            X += deltaX;
+            Y += deltaY;
+            hurtBox.MoveTo((int) X, (int) Y);
         }
 
         public void Render(SpriteBatch graphics)
         {
             graphics.Draw(sprite,
-                location,
+                new Vector2((float) X, (float) Y),
                 null,
                 Color.White,
                 0f,
-                new Vector2(sprite.Width / 2, sprite.Height / 2),
+                new Vector2(0, 0),
                 Vector2.One,
                 SpriteEffects.None,
                 0f);

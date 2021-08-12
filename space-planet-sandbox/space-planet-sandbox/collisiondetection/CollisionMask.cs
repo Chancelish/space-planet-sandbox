@@ -12,56 +12,92 @@ namespace space_planet_sandbox.collisiondetection
         public bool Collide(Rectangle rectangle);
 
         public bool Collide(CollisionGrid grid);
+
+        public void MoveTo(int x, int y);
     }
 
-    public abstract class IHitBox : ICollisionMask
+    public class HitBox : ICollisionMask
     {
-        public abstract Rectangle BoundingBox();
+        private Rectangle boundingBox;
+
+        public HitBox(int x, int y, int width, int height)
+        {
+            boundingBox = new Rectangle(x, y, width, height);
+        }
 
         public bool Collide(ICollisionMask _other, int _xOffset, int _yOffset)
         {
-            var displacedRectangle = new Rectangle(BoundingBox().X - _xOffset, BoundingBox().Y - _yOffset, BoundingBox().Width, BoundingBox().Height);
+            var displacedRectangle = new Rectangle(boundingBox.X + _xOffset, boundingBox.Y + _yOffset, boundingBox.Width, boundingBox.Height);
             return _other.Collide(displacedRectangle);
         }
 
         public bool Collide(Point point)
         {
-            return BoundingBox().Contains(point);
+            return boundingBox.Contains(point);
         }
 
         public bool Collide(Rectangle rectangle)
         {
-            return BoundingBox().Intersects(rectangle);
+            return boundingBox.Intersects(rectangle);
         }
 
         public bool Collide(CollisionGrid grid)
         {
-            return grid.Intersects(BoundingBox());
+            return grid.Intersects(boundingBox);
+        }
+
+        public void MoveTo(int x, int y)
+        {
+            boundingBox.X = x;
+            boundingBox.Y = y;
+        }
+
+        public void Resize(int width, int height)
+        {
+            boundingBox.Width = width;
+            boundingBox.Height = height;
+        }
+
+        public Point Size()
+        {
+            return boundingBox.Size;
         }
     }
 
-    public abstract class IPointMask : ICollisionMask
+    public class PointMask : ICollisionMask
     {
-        public abstract Point Location();
+        private Point pointLocation;
+
+        public PointMask(int x, int y)
+        {
+            pointLocation = new Point(x, y);
+        }
+
         public bool Collide(ICollisionMask _other, int _xOffset, int _yOffset)
         {
-            var displacedPoint = new Point(Location().X - _xOffset, Location().Y - _yOffset);
+            var displacedPoint = new Point(pointLocation.X + _xOffset, pointLocation.Y + _yOffset);
             return _other.Collide(displacedPoint);
         }
 
         public bool Collide(Point point)
         {
-            return Location() == point;
+            return pointLocation == point;
         }
 
         public bool Collide(Rectangle rectangle)
         {
-            return rectangle.Contains(Location());
+            return rectangle.Contains(pointLocation);
         }
 
         public bool Collide(CollisionGrid grid)
         {
-            return grid.Contains(Location());
+            return grid.Contains(pointLocation);
+        }
+
+        public void MoveTo(int x, int y)
+        {
+            pointLocation.X = x;
+            pointLocation.Y = y;
         }
     }
 
@@ -69,8 +105,8 @@ namespace space_planet_sandbox.collisiondetection
     {
         public int tileSize;
         public int[,] solidTiles;
-        public int gridHeight;
-        public int gridWidth;
+        public readonly int gridHeight;
+        public readonly int gridWidth;
         public Point zeroOrigin;
 
         public CollisionGrid(int tSize, int width, int height, int x, int y)
@@ -118,30 +154,47 @@ namespace space_planet_sandbox.collisiondetection
             return false;
         }
     }
-    public abstract class IGridMask : ICollisionMask
+
+    public class GridMask : ICollisionMask
     {
-        public abstract CollisionGrid GetCollisionGrid();
+        private CollisionGrid grid;
+
+        public GridMask(int tileSize, int width, int height, int x = 0, int y = 0)
+        {
+            grid = new CollisionGrid(tileSize, width, height, x, y);
+        }
 
         public bool Collide(ICollisionMask _other, int _xOffset, int _yOffset)
         {
-            CollisionGrid g = GetCollisionGrid();
-            var displacedGrid = new CollisionGrid(g.tileSize, g.gridWidth, g.gridHeight, g.zeroOrigin.X - _xOffset, g.zeroOrigin.Y);
+            var displacedGrid = new CollisionGrid(grid.tileSize, grid.gridWidth, grid.gridHeight, grid.zeroOrigin.X + _xOffset, grid.zeroOrigin.Y + _yOffset);
             return Collide(displacedGrid);
         }
 
         public bool Collide(Point point)
         {
-            return GetCollisionGrid().Contains(point);
+            return grid.Contains(point);
         }
 
         public bool Collide(Rectangle rectangle)
         {
-            return GetCollisionGrid().Intersects(rectangle);
+            return grid.Intersects(rectangle);
         }
 
         public bool Collide(CollisionGrid grid)
         {
             return false; // NO, just NO!
+        }
+
+        // Although supported, please don't move grids, it makes things complicated.
+        public void MoveTo(int x, int y)
+        {
+            grid.zeroOrigin.X = x;
+            grid.zeroOrigin.Y = y;
+        }
+
+        public void ChangeTile(int x, int y, int tileType)
+        {
+            grid.solidTiles[x, y] = tileType;
         }
     }
 }
