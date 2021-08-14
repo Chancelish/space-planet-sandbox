@@ -12,8 +12,22 @@ namespace space_planet_sandbox
     {
         public static Dictionary<string, Texture2D> loadedTextures = new Dictionary<string, Texture2D>();
 
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        private RenderTarget2D renderTarget;
+
+        private float renderScale = 1;
+
+        public float RenderScale
+        {
+            get => renderScale;
+            set
+            {
+                if (value > 0 && value < 10) {
+                    renderScale = value;
+                }
+            }
+        }
 
         private Texture2D gorilla;
         private TileMap tileMap;
@@ -28,28 +42,33 @@ namespace space_planet_sandbox
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            tileMap = new TileMap(60, 30);
-            character = new PlayerCharacter(50, 50);
-
             base.Initialize();
+
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.ApplyChanges();
         }
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
             gorilla = Content.Load<Texture2D>("morshu");
             LoadTexture("unknown");
             LoadTexture("ground_tiles_and_plants");
+
+            renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
+
+            tileMap = new TileMap(60, 30);
+            character = new PlayerCharacter(50, 50);
         }
 
         private void LoadTexture(string textureName)
@@ -71,7 +90,7 @@ namespace space_planet_sandbox
             var leftMouseClicked = leftMouseCurrent == ButtonState.Pressed && leftMouseLast == ButtonState.Released;
            if (leftMouseClicked)
             {
-                tileMap.Update(mouseState.X, mouseState.Y);
+                tileMap.Update((int) (mouseState.X / RenderScale), (int) (mouseState.Y / RenderScale));
             }
 
             base.Update(gameTime);
@@ -81,14 +100,21 @@ namespace space_planet_sandbox
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(gorilla, new Vector2(0, 0), Color.White);
-            tileMap.Render(_spriteBatch);
-            character.Render(_spriteBatch);
-            _spriteBatch.End();
+            RenderScale = 1F / (1080F / graphics.GraphicsDevice.Viewport.Width);
+            GraphicsDevice.SetRenderTarget(renderTarget);
 
-            // TODO: Add your drawing code here
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap);
+            spriteBatch.Draw(gorilla, new Vector2(0, 0), Color.White);
+            tileMap.Render(spriteBatch);
+            character.Render(spriteBatch);
+            spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+            spriteBatch.Draw(renderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, RenderScale, SpriteEffects.None, 0f);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
