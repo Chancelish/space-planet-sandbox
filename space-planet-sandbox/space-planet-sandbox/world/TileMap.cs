@@ -51,6 +51,10 @@ namespace space_planet_sandbox.world
         {
             int xTile = x / 16;
             int yTile = y / 16;
+            if (xTile < 0 || yTile < 0 || xTile >= tileWidth || yTile >= tileHeight)
+            {
+                return;
+            }
             if (tileData[xTile, yTile].tileName.Equals("empty"))
             {
                 tileData[xTile, yTile].tileName = "ground_tiles_and_plants";

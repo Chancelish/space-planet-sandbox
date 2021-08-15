@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 using space_planet_sandbox.world;
 using space_planet_sandbox.entities.player;
+using space_planet_sandbox.rendering;
 
 namespace space_planet_sandbox
 {
@@ -15,19 +16,9 @@ namespace space_planet_sandbox
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private RenderTarget2D renderTarget;
+        private Camera camera;
 
         private float renderScale = 1;
-
-        public float RenderScale
-        {
-            get => renderScale;
-            set
-            {
-                if (value > 0 && value < 10) {
-                    renderScale = value;
-                }
-            }
-        }
 
         private Texture2D gorilla;
         private TileMap tileMap;
@@ -65,10 +56,11 @@ namespace space_planet_sandbox
             LoadTexture("unknown");
             LoadTexture("ground_tiles_and_plants");
 
-            renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
+            renderTarget = new RenderTarget2D(GraphicsDevice, 1280, 720);
 
             tileMap = new TileMap(60, 30);
             character = new PlayerCharacter(50, 50);
+            camera = new Camera();
         }
 
         private void LoadTexture(string textureName)
@@ -82,6 +74,7 @@ namespace space_planet_sandbox
                 Exit();
 
             character.Update(gameTime, tileMap);
+            camera.Follow(character, 1280, 720);
 
             var mouseState = Mouse.GetState();
             leftMouseCurrent = mouseState.LeftButton;
@@ -90,7 +83,7 @@ namespace space_planet_sandbox
             var leftMouseClicked = leftMouseCurrent == ButtonState.Pressed && leftMouseLast == ButtonState.Released;
            if (leftMouseClicked)
             {
-                tileMap.Update((int) (mouseState.X / RenderScale), (int) (mouseState.Y / RenderScale));
+                tileMap.Update((int) ((mouseState.X + camera.x) / renderScale), (int) ((mouseState.Y + camera.y) / renderScale));
             }
 
             base.Update(gameTime);
@@ -100,11 +93,11 @@ namespace space_planet_sandbox
 
         protected override void Draw(GameTime gameTime)
         {
-            RenderScale = 1F / (1080F / graphics.GraphicsDevice.Viewport.Width);
+            renderScale = 1F / (720F / graphics.GraphicsDevice.Viewport.Height);
             GraphicsDevice.SetRenderTarget(renderTarget);
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, transformMatrix: camera.Transform);
             spriteBatch.Draw(gorilla, new Vector2(0, 0), Color.White);
             tileMap.Render(spriteBatch);
             character.Render(spriteBatch);
@@ -113,7 +106,7 @@ namespace space_planet_sandbox
             GraphicsDevice.SetRenderTarget(null);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
-            spriteBatch.Draw(renderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, RenderScale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(renderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
             spriteBatch.End();
 
             base.Draw(gameTime);

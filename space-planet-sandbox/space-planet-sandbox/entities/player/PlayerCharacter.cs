@@ -10,16 +10,14 @@ namespace space_planet_sandbox.entities.player
     class PlayerCharacter : CollidableEntity
     {
         private HitBox hurtBox;
-        private double X;
-        private double Y;
         private float speed = 100.0f;
         private Texture2D sprite;
 
         public PlayerCharacter(int startX, int startY)
         {
             hurtBox = new HitBox(startX, startY, 16, 32);
-            X = startX;
-            Y = startY;
+            x = startX;
+            y = startY;
         }
         public override ICollisionMask GetCollisionMask()
         {
@@ -53,15 +51,15 @@ namespace space_planet_sandbox.entities.player
                 deltaX = 0; deltaY = 0;
             }
 
-            X += deltaX;
-            Y += deltaY;
-            hurtBox.MoveTo((int) X, (int) Y);
+            x += (float) deltaX;
+            y += (float) deltaY;
+            hurtBox.MoveTo((int) x, (int) y);
         }
 
         public void Render(SpriteBatch graphics)
         {
             graphics.Draw(sprite,
-                new Vector2((float) X, (float) Y),
+                new Vector2((float) x, (float) y),
                 null,
                 Color.White,
                 0f,
