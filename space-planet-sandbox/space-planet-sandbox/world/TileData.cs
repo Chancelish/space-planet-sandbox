@@ -11,8 +11,8 @@ namespace space_planet_sandbox.world
         public double tileDurability; // the total durability of the tile
         public double tileToughness; // mining power required to deplete durability
         public string tileName; // the texture group to pull from
-        public string drop; // the item it should drop when broken
-        public List<String> tags; // for now, ore, environment, crumble, or constructed
+        public HashSet<String> behaviorTags; // for now, ore, crumble, or constructed
+        public HashSet<String> biomeTags; // any biomes this block can associated, unknown biomes default to plains
         public bool richDrop; // true drop 3 blocks instead of one (ores only)
     }
 }

@@ -29,7 +29,7 @@ namespace space_planet_sandbox.entities.player
             var kstate = Keyboard.GetState();
             double deltaY = 0;
             double deltaX = 0;
-            sprite = Game1.loadedTextures["unknown"];
+            sprite = SandboxGame.loadedTextures["unknown"];
 
             if (kstate.IsKeyDown(Keys.Up))
                 deltaY -= speed * time.ElapsedGameTime.TotalSeconds;

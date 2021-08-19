@@ -5,10 +5,10 @@ namespace space_planet_sandbox.entities
 {
     public abstract class CollidableEntity
     {
-        public abstract ICollisionMask GetCollisionMask();
-
         protected float x;
         protected float y;
+
+        public abstract ICollisionMask GetCollisionMask();
 
         public bool Collide(CollidableEntity other, int xOffset, int yOffset)
         {

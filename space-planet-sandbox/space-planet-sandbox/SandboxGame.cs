@@ -9,7 +9,7 @@ using space_planet_sandbox.rendering;
 
 namespace space_planet_sandbox
 {
-    public class Game1 : Game
+    public class SandboxGame : Game
     {
         public static Dictionary<string, Texture2D> loadedTextures = new Dictionary<string, Texture2D>();
 
@@ -31,7 +31,7 @@ namespace space_planet_sandbox
         private ButtonState rightMouseLast = ButtonState.Released;
         private ButtonState rightMouseCurrent = ButtonState.Released;
 
-        public Game1()
+        public SandboxGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -58,14 +58,14 @@ namespace space_planet_sandbox
 
             renderTarget = new RenderTarget2D(GraphicsDevice, 1280, 720);
 
-            tileMap = new TileMap(60, 30);
+            tileMap = new TileMap(16, 60, 30);
             character = new PlayerCharacter(50, 50);
             camera = new Camera();
         }
 
         private void LoadTexture(string textureName)
         {
-            Game1.loadedTextures.Add(textureName, Content.Load<Texture2D>(textureName));
+            SandboxGame.loadedTextures.Add(textureName, Content.Load<Texture2D>(textureName));
         }
 
         protected override void Update(GameTime gameTime)
