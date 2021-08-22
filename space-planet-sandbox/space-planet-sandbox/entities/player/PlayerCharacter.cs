@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using space_planet_sandbox.collisiondetection;
 using Microsoft.Xna.Framework.Input;
 using space_planet_sandbox.world;
+using System.Collections.Generic;
 
 namespace space_planet_sandbox.entities.player
 {
@@ -12,6 +13,7 @@ namespace space_planet_sandbox.entities.player
         private HitBox hurtBox;
         private float speed = 100.0f;
         private Texture2D sprite;
+        public List<TileMap> interSectingChunks;
 
         public PlayerCharacter(int startX, int startY)
         {
@@ -24,8 +26,10 @@ namespace space_planet_sandbox.entities.player
             return hurtBox;
         }
 
-        public void Update(GameTime time, TileMap world)
+        public override void Update(GameTime time)
         {
+            SandboxGame.camera.Follow(this, 1280, 720);
+            
             var kstate = Keyboard.GetState();
             double deltaY = 0;
             double deltaX = 0;
@@ -46,9 +50,13 @@ namespace space_planet_sandbox.entities.player
             int xCheck = (int) (deltaX > 0 ? Math.Ceiling(deltaX) : Math.Floor(deltaX));
             int yCheck = (int) (deltaY > 0 ? Math.Ceiling(deltaY) : Math.Floor(deltaY));
 
-            if (Collide(world, xCheck, yCheck))
+            foreach (var chunk in interSectingChunks)
             {
-                deltaX = 0; deltaY = 0;
+                if (Collide(chunk, xCheck, yCheck))
+                {
+                    deltaX = 0; deltaY = 0;
+                    break;
+                }
             }
 
             x += (float) deltaX;

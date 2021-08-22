@@ -10,6 +10,8 @@ namespace space_planet_sandbox.entities
 
         public abstract ICollisionMask GetCollisionMask();
 
+        public abstract void Update(GameTime time);
+
         public bool Collide(CollidableEntity other, int xOffset, int yOffset)
         {
             return GetCollisionMask().Collide(other.GetCollisionMask(), xOffset, yOffset);

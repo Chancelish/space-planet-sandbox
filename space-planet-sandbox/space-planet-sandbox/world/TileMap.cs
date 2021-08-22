@@ -42,11 +42,11 @@ namespace space_planet_sandbox.world
             {
                 for (int iy = 0; iy < height; iy++)
                 {
-                    if (iy < 20)
+                    if ((iy * 16) + yOrigin < 320)
                     {
                         tileData[ix, iy].tileName = EMPTY;
                     }
-                    else if (iy == 20)
+                    else if ((iy * 16) + yOrigin == 320)
                     {
                         tileData[ix, iy].tileName = "ground_tiles_and_plants";
                         tileData[ix, iy].tileIndex = 1;
@@ -58,7 +58,7 @@ namespace space_planet_sandbox.world
                         tileData[ix, iy].tileIndex = 3;
                         grid.ChangeTile(ix, iy, 1);
                     }
-                    tileData[ix, iy].behaviorTags = new HashSet<string>();
+                    tileData[ix, iy].behaviorTag = "basic";
                     tileData[ix, iy].biomeTags = new HashSet<string>();
                 }
             }
@@ -82,6 +82,11 @@ namespace space_planet_sandbox.world
                 tileData[xTile, yTile].tileName = EMPTY;
                 grid.ChangeTile(xTile, yTile, 0);
             }
+        }
+
+        public override void Update(GameTime time)
+        {
+            
         }
         public void Render(SpriteBatch graphics)
         {

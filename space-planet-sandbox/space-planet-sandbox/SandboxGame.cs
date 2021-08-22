@@ -16,20 +16,13 @@ namespace space_planet_sandbox
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private RenderTarget2D renderTarget;
-        private Camera camera;
+        public static Camera camera = new Camera();
 
         private float renderScale = 1;
 
         private Texture2D gorilla;
-        private TileMap tileMap;
 
-        private PlayerCharacter character;
-
-        private ButtonState leftMouseLast = ButtonState.Released;
-        private ButtonState leftMouseCurrent = ButtonState.Released;
-
-        private ButtonState rightMouseLast = ButtonState.Released;
-        private ButtonState rightMouseCurrent = ButtonState.Released;
+        private World testWorld;
 
         public SandboxGame()
         {
@@ -58,9 +51,7 @@ namespace space_planet_sandbox
 
             renderTarget = new RenderTarget2D(GraphicsDevice, 1280, 720);
 
-            tileMap = new TileMap(16, 60, 30);
-            character = new PlayerCharacter(50, 50);
-            camera = new Camera();
+            testWorld = new World(7, 7, 32);
         }
 
         private void LoadTexture(string textureName)
@@ -73,22 +64,13 @@ namespace space_planet_sandbox
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            character.Update(gameTime, tileMap);
-            camera.Follow(character, 1280, 720);
+            InputUtils.PreUdate();
 
-            var mouseState = Mouse.GetState();
-            leftMouseCurrent = mouseState.LeftButton;
-            rightMouseCurrent = mouseState.RightButton;
-
-            var leftMouseClicked = leftMouseCurrent == ButtonState.Pressed && leftMouseLast == ButtonState.Released;
-           if (leftMouseClicked)
-            {
-                tileMap.Update((int) ((mouseState.X + camera.x) / renderScale), (int) ((mouseState.Y + camera.y) / renderScale));
-            }
+            testWorld.Update(gameTime);
 
             base.Update(gameTime);
-            leftMouseLast = leftMouseCurrent;
-            rightMouseLast = rightMouseCurrent;
+
+            InputUtils.PostUpdate();
         }
 
         protected override void Draw(GameTime gameTime)
@@ -99,8 +81,9 @@ namespace space_planet_sandbox
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, transformMatrix: camera.Transform);
             spriteBatch.Draw(gorilla, new Vector2(0, 0), Color.White);
-            tileMap.Render(spriteBatch);
-            character.Render(spriteBatch);
+
+            testWorld.Render(spriteBatch);
+
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
@@ -110,6 +93,36 @@ namespace space_planet_sandbox
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+    }
+
+    public sealed class InputUtils {
+
+        public static bool LeftMouseClicked { get; private set; }
+        public static bool LeftMouseReleased { get; private set; }
+
+        public static bool RightMouseClicked { get; private set; }
+        public static bool RightMouseReleased { get; private set; }
+        public static bool LeftMouse { get; private set; }
+        public static bool RightMouse { get; private set; }
+        public static bool LeftMouseLast { get; private set; }
+        public static bool RightMouseLast { get; private set; }
+
+        public static void PreUdate()
+        {
+            var mouseState = Mouse.GetState();
+            LeftMouse = mouseState.LeftButton == ButtonState.Pressed;
+            RightMouse = mouseState.RightButton == ButtonState.Pressed;
+            LeftMouseClicked = LeftMouse && !LeftMouseLast;
+            RightMouseClicked = RightMouse && !RightMouseLast;
+            LeftMouseReleased = !LeftMouse && LeftMouseLast;
+            RightMouseReleased = !RightMouse && RightMouseLast;
+        }
+
+        public static void PostUpdate()
+        {
+            RightMouseLast = RightMouse;
+            LeftMouseLast = LeftMouse;
         }
     }
 }
