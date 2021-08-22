@@ -59,16 +59,21 @@ namespace space_planet_sandbox.world
             if (InputUtils.LeftMouseClicked)
             {
                 var mousePosition = Mouse.GetState().Position;
-                int xChunk = mousePosition.X / (chunkSize * 16);
-                int yChunk = mousePosition.Y / (chunkSize * 16);
-                chunks[xChunk, yChunk].Update(mousePosition.X, mousePosition.Y);
+                int realMouseX = mousePosition.X + SandboxGame.camera.x;
+                int realMouseY = mousePosition.Y + SandboxGame.camera.y;
+                int xChunk = realMouseX / (chunkSize * 16);
+                int yChunk = realMouseY / (chunkSize * 16);
+                if (xChunk >= 0 && xChunk < chunkWidth && yChunk >= 0 && yChunk < chunkHeight)
+                {
+                    chunks[xChunk, yChunk].Update(realMouseX, realMouseY);
+                }
             }
 
             player.interSectingChunks = new List<TileMap>();
             int x1 = ((int) player.Position().X) / (chunkSize * 16);
             int y1 = ((int) player.Position().Y) / (chunkSize * 16);
             int x2 = ((int) (player.Position().X + 16)) / (chunkSize * 16);
-            int y2 = ((int) (player.Position().X + 32)) / (chunkSize * 16);
+            int y2 = ((int) (player.Position().Y + 32)) / (chunkSize * 16);
             for (int i = Math.Max(x1, 0); i <= Math.Min(x2, chunkWidth - 1); i++)
             {
                 for (int j = Math.Max(y1, 0); j <= Math.Min(y2, chunkHeight - 1); j++)

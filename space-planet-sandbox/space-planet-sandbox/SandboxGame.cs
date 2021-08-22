@@ -44,6 +44,8 @@ namespace space_planet_sandbox
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            TileDataDictionary.LoadTiles();
+
             // TODO: use this.Content to load your game content here
             gorilla = Content.Load<Texture2D>("morshu");
             LoadTexture("unknown");

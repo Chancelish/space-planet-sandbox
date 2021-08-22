@@ -11,7 +11,7 @@ namespace space_planet_sandbox.entities.player
     class PlayerCharacter : CollidableEntity
     {
         private HitBox hurtBox;
-        private float speed = 100.0f;
+        private float speed = 200.0f;
         private Texture2D sprite;
         public List<TileMap> interSectingChunks;
 
@@ -67,7 +67,7 @@ namespace space_planet_sandbox.entities.player
         public void Render(SpriteBatch graphics)
         {
             graphics.Draw(sprite,
-                new Vector2((float) x, (float) y),
+                new Vector2(x, y),
                 null,
                 Color.White,
                 0f,
