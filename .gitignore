@@ -8,3 +8,5 @@
 **/bin
 **/Debug
 *.cache
+*.nget.*
+*.project.assets.json

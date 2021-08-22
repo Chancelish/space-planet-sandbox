@@ -14,7 +14,7 @@ namespace space_planet_sandbox.world
         private readonly int tileSize;
         private int originX;
         private int originY;
-        private readonly TileData[,] tileData;
+        private readonly TileDataAbridged[,] tileData;
         private GridMask grid;
 
         private Dictionary<string, int> biomeScore;
@@ -30,7 +30,7 @@ namespace space_planet_sandbox.world
             tileSize = size;
             x = originX = xOrigin;
             y = originY = yOrigin;
-            tileData = new TileData[width, height];
+            tileData = new TileDataAbridged[width, height];
             grid = new GridMask(size, width, height, xOrigin, yOrigin);
             biomeScore = new Dictionary<string, int>();
             biomeScore.Add("sky", 0);
@@ -44,22 +44,20 @@ namespace space_planet_sandbox.world
                 {
                     if ((iy * 16) + yOrigin < 320)
                     {
-                        tileData[ix, iy].tileName = EMPTY;
+                        tileData[ix, iy] = TileDataDictionary.GetTile(EMPTY).Abridge();
                     }
                     else if ((iy * 16) + yOrigin == 320)
                     {
-                        tileData[ix, iy].tileName = "ground_tiles_and_plants";
+                        tileData[ix, iy] = TileDataDictionary.GetTile("ground_tiles_and_plants").Abridge();
                         tileData[ix, iy].tileIndex = 1;
                         grid.ChangeTile(ix, iy, 1);
                     }
                     else
                     {
-                        tileData[ix, iy].tileName = "ground_tiles_and_plants";
+                        tileData[ix, iy] = TileDataDictionary.GetTile("ground_tiles_and_plants").Abridge();
                         tileData[ix, iy].tileIndex = 3;
                         grid.ChangeTile(ix, iy, 1);
                     }
-                    tileData[ix, iy].behaviorTag = "basic";
-                    tileData[ix, iy].biomeTags = new HashSet<string>();
                 }
             }
         }
@@ -67,7 +65,7 @@ namespace space_planet_sandbox.world
         public void Update(int mouseX, int mouseY)
         {
             int xTile = (mouseX - originX) / tileSize;
-            int yTile = (mouseY - originY)/ tileSize;
+            int yTile = (mouseY - originY) / tileSize;
             if (xTile < 0 || yTile < 0 || xTile >= tileWidth || yTile >= tileHeight)
             {
                 return;
@@ -84,6 +82,7 @@ namespace space_planet_sandbox.world
             }
         }
 
+        // actually fine for now, liquids and sand tiles have to be figured out eventually
         public override void Update(GameTime time)
         {
             
@@ -121,7 +120,7 @@ namespace space_planet_sandbox.world
             // here or else there must be some indicator of whether a tile can be placed
             if (tileData[xLoc, yLoc].tileName.Equals(EMPTY))
             {
-                tileData[xLoc, yLoc] = tile;
+                tileData[xLoc, yLoc] = tile.Abridge();
                 grid.ChangeTile(xLoc, yLoc, 1);
                 AlterBiomeOnAddition(xLoc, yLoc);
             }
@@ -132,7 +131,9 @@ namespace space_planet_sandbox.world
             // shouldn't get here on empty tile, final safeguard
             if (tileData[xLoc, yLoc].tileName.Equals(EMPTY)) return;
 
-            foreach (string tag in tileData[xLoc, yLoc].biomeTags)
+            var biomes = TileDataDictionary.GetTile(tileData[xLoc, yLoc].tileName).biomeTags;
+
+            foreach (string tag in biomes)
             {
                 {
                     biomeScore[tag]--;
@@ -149,7 +150,7 @@ namespace space_planet_sandbox.world
                     }
                 }
             }
-            tileData[xLoc, yLoc].tileName = EMPTY;
+            tileData[xLoc, yLoc] = TileDataDictionary.GetTile(EMPTY).Abridge();
             grid.ChangeTile(xLoc, yLoc, 0);
             // dropItemFromTile();
         }
@@ -169,7 +170,9 @@ namespace space_planet_sandbox.world
 
         private void AlterBiomeOnAddition(int xLoc, int yLoc)
         {
-            foreach (string tag in tileData[xLoc, yLoc].biomeTags)
+            var biomes = TileDataDictionary.GetTile(tileData[xLoc, yLoc].tileName).biomeTags;
+
+            foreach (string tag in biomes)
             {
                 if (biomeScore.ContainsKey(tag))
                 {
