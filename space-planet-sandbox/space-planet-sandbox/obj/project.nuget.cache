@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "0saoBXBKaql2FpVfw7STysZ1nRrodYAknb0Le6An6Qa+cwkch5TAqHflfYU/5WON9GCDdjROU75+iwnC/AOF1g==",
+  "dgSpecHash": "7znLZ4/V4NDJ8yLarY8Qy5UiUsMr5AY8FQY0UcVb0ImO6w3JoPYAAQ+cLb/DNSbYLkBWtpVKdIkx3Vwku6kT3A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Chance\\Documents\\Programs\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox.csproj",
+  "projectFilePath": "C:\\Users\\jack_\\Desktop\\Space_Planet_Sandbox\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Chance\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1641\\monogame.content.builder.task.3.8.0.1641.nupkg.sha512",
-    "C:\\Users\\Chance\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512"
+    "C:\\Users\\jack_\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1641\\monogame.content.builder.task.3.8.0.1641.nupkg.sha512",
+    "C:\\Users\\jack_\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512"
   ],
   "logs": []
 }

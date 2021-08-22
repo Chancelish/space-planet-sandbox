@@ -4,10 +4,10 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Chance/Documents/Programs/space-planet-sandbox/space-planet-sandbox/space-planet-sandbox/Content/ground_tiles_and_plants.png</File>
-    <File>C:/Users/Chance/Documents/Programs/space-planet-sandbox/space-planet-sandbox/space-planet-sandbox/Content/items_and_other_villagers.png</File>
-    <File>C:/Users/Chance/Documents/Programs/space-planet-sandbox/space-planet-sandbox/space-planet-sandbox/Content/morshu.png</File>
-    <File>C:/Users/Chance/Documents/Programs/space-planet-sandbox/space-planet-sandbox/space-planet-sandbox/Content/unknown.png</File>
+    <File>C:/Users/jack_/Desktop/Space_Planet_Sandbox/space-planet-sandbox/space-planet-sandbox/Content/ground_tiles_and_plants.png</File>
+    <File>C:/Users/jack_/Desktop/Space_Planet_Sandbox/space-planet-sandbox/space-planet-sandbox/Content/items_and_other_villagers.png</File>
+    <File>C:/Users/jack_/Desktop/Space_Planet_Sandbox/space-planet-sandbox/space-planet-sandbox/Content/morshu.png</File>
+    <File>C:/Users/jack_/Desktop/Space_Planet_Sandbox/space-planet-sandbox/space-planet-sandbox/Content/unknown.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
