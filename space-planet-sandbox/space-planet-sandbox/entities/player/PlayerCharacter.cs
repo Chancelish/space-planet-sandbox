@@ -67,7 +67,7 @@ namespace space_planet_sandbox.entities.player
         public void Render(SpriteBatch graphics)
         {
             graphics.Draw(sprite,
-                new Vector2((float) x, (float) y),
+                new Vector2(x, y),
                 null,
                 Color.White,
                 0f,
