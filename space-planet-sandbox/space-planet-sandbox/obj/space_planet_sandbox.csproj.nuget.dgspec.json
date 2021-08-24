@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Chance\\Documents\\Programs\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox.csproj": {}
+    "C:\\Users\\Chance\\Documents\\Programs\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox\\space_planet_sandbox.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Chance\\Documents\\Programs\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox.csproj": {
+    "C:\\Users\\Chance\\Documents\\Programs\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox\\space_planet_sandbox.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Chance\\Documents\\Programs\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox.csproj",
-        "projectName": "space-planet-sandbox",
-        "projectPath": "C:\\Users\\Chance\\Documents\\Programs\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox.csproj",
+        "projectUniqueName": "C:\\Users\\Chance\\Documents\\Programs\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox\\space_planet_sandbox.csproj",
+        "projectName": "space_planet_sandbox",
+        "projectPath": "C:\\Users\\Chance\\Documents\\Programs\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox\\space_planet_sandbox.csproj",
         "packagesPath": "C:\\Users\\Chance\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Chance\\Documents\\Programs\\space-planet-sandbox\\space-planet-sandbox\\space-planet-sandbox\\obj\\",
         "projectStyle": "PackageReference",

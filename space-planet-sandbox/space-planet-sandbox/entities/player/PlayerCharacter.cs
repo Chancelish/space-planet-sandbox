@@ -47,8 +47,8 @@ namespace space_planet_sandbox.entities.player
             if (kstate.IsKeyDown(Keys.Right))
                 deltaX += speed * time.ElapsedGameTime.TotalSeconds;
 
-            int xCheck = (int) (deltaX > 0 ? Math.Ceiling(deltaX) : Math.Floor(deltaX));
-            int yCheck = (int) (deltaY > 0 ? Math.Ceiling(deltaY) : Math.Floor(deltaY));
+            int xCheck = (int) (deltaX + Math.Sign(deltaX));
+            int yCheck = (int) (deltaY + Math.Sign(deltaY));
 
             foreach (var chunk in interSectingChunks)
             {
