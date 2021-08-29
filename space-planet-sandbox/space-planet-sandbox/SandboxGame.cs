@@ -42,6 +42,8 @@ namespace space_planet_sandbox
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
+
+            InputUtils.SetDefaultKeys();
         }
 
         protected override void LoadContent()
@@ -76,6 +78,7 @@ namespace space_planet_sandbox
             InputUtils.PreUdate();
 
             testWorld.Update(gameTime);
+            gui.Update();
 
             base.Update(gameTime);
 
@@ -116,6 +119,7 @@ namespace space_planet_sandbox
         public static bool RightMouse { get; private set; }
         public static bool LeftMouseLast { get; private set; }
         public static bool RightMouseLast { get; private set; }
+        public static int previousScrollWheelValue { get; private set; }
 
         private static Dictionary<string, Keys> keyBindings = new Dictionary<string, Keys>();
         private static Dictionary<string, bool> boundKeyStates = new Dictionary<string, bool>();
@@ -141,6 +145,7 @@ namespace space_planet_sandbox
         {
             RightMouseLast = RightMouse;
             LeftMouseLast = LeftMouse;
+            previousScrollWheelValue = Mouse.GetState().ScrollWheelValue;
             foreach (string key in keyBindings.Keys)
             {
                 boundKeyPrevious[key] = boundKeyStates[key];

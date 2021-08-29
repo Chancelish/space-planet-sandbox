@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
 using System.Text;
 
 namespace space_planet_sandbox.gui
@@ -31,6 +31,35 @@ namespace space_planet_sandbox.gui
                 graphics.DrawString(SandboxGame.defaultFont, label, textLocation2, Color.Black, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
                 var textLocation3 = new Vector2((501 + 32 * i) * renderScale, 686 * renderScale);
                 graphics.DrawString(SandboxGame.defaultFont, label, textLocation, Color.White, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
+            }
+        }
+
+        public void Update()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (InputUtils.GetKeyState("hotbar" + i))
+                {
+                    selectedItem = i - 1;
+                }
+            }
+
+            if (InputUtils.previousScrollWheelValue > Mouse.GetState().ScrollWheelValue)
+            {
+                selectedItem++;
+            }
+            else if (InputUtils.previousScrollWheelValue < Mouse.GetState().ScrollWheelValue)
+            {
+                selectedItem--;
+            }
+
+            if (selectedItem < 0)
+            {
+                selectedItem += 10;
+            }
+            if (selectedItem > 10)
+            {
+                selectedItem -= 10;
             }
         }
     }
