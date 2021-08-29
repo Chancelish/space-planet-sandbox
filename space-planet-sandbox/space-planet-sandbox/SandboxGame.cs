@@ -6,23 +6,27 @@ using System.Collections.Generic;
 using space_planet_sandbox.world;
 using space_planet_sandbox.entities.player;
 using space_planet_sandbox.rendering;
+using space_planet_sandbox.gui;
 
 namespace space_planet_sandbox
 {
     public class SandboxGame : Game
     {
         public static Dictionary<string, Texture2D> loadedTextures = new Dictionary<string, Texture2D>();
+        public static SpriteFont defaultFont;
+
+        public static Camera camera = new Camera();
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        private RenderTarget2D renderTarget;
-        public static Camera camera = new Camera();
+        private RenderTarget2D renderTarget;  
 
         private float renderScale = 1;
 
         private Texture2D gorilla;
 
         private World testWorld;
+        private PlayerGui gui;
 
         public SandboxGame()
         {
@@ -50,9 +54,12 @@ namespace space_planet_sandbox
             gorilla = Content.Load<Texture2D>("morshu");
             LoadTexture("unknown");
             LoadTexture("ground_tiles_and_plants");
+            LoadTexture("hotbarframe");
+
+            defaultFont = Content.Load<SpriteFont>("default");
 
             renderTarget = new RenderTarget2D(GraphicsDevice, 1280, 720);
-
+            gui = new PlayerGui();
             testWorld = new World(7, 7, 32);
         }
 
@@ -82,7 +89,7 @@ namespace space_planet_sandbox
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, transformMatrix: camera.Transform);
-            spriteBatch.Draw(gorilla, new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(gorilla, Vector2.Zero, Color.White);
 
             testWorld.Render(spriteBatch);
 
@@ -92,6 +99,7 @@ namespace space_planet_sandbox
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
             spriteBatch.Draw(renderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
+            gui.Render(spriteBatch, renderScale);
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -102,7 +110,6 @@ namespace space_planet_sandbox
 
         public static bool LeftMouseClicked { get; private set; }
         public static bool LeftMouseReleased { get; private set; }
-
         public static bool RightMouseClicked { get; private set; }
         public static bool RightMouseReleased { get; private set; }
         public static bool LeftMouse { get; private set; }
@@ -110,21 +117,78 @@ namespace space_planet_sandbox
         public static bool LeftMouseLast { get; private set; }
         public static bool RightMouseLast { get; private set; }
 
+        private static Dictionary<string, Keys> keyBindings = new Dictionary<string, Keys>();
+        private static Dictionary<string, bool> boundKeyStates = new Dictionary<string, bool>();
+        private static Dictionary<string, bool> boundKeyPrevious = new Dictionary<string, bool>();
+
         public static void PreUdate()
         {
             var mouseState = Mouse.GetState();
+            var keyboardState = Keyboard.GetState();
             LeftMouse = mouseState.LeftButton == ButtonState.Pressed;
             RightMouse = mouseState.RightButton == ButtonState.Pressed;
             LeftMouseClicked = LeftMouse && !LeftMouseLast;
             RightMouseClicked = RightMouse && !RightMouseLast;
             LeftMouseReleased = !LeftMouse && LeftMouseLast;
             RightMouseReleased = !RightMouse && RightMouseLast;
+            foreach(string key in keyBindings.Keys)
+            {
+                boundKeyStates[key] = keyboardState.IsKeyDown(keyBindings[key]);
+            }
         }
 
         public static void PostUpdate()
         {
             RightMouseLast = RightMouse;
             LeftMouseLast = LeftMouse;
+            foreach (string key in keyBindings.Keys)
+            {
+                boundKeyPrevious[key] = boundKeyStates[key];
+            }
+        }
+
+        public static bool GetKeyState(string keyBinding)
+        {
+            if (boundKeyStates.ContainsKey(keyBinding))
+            {
+                return boundKeyStates[keyBinding];
+            }
+            return false;
+        }
+
+        public static bool GetLastFrameKeyState(string keyBinding)
+        {
+            if (boundKeyPrevious.ContainsKey(keyBinding))
+            {
+                return boundKeyPrevious[keyBinding];
+            }
+            return false;
+        }
+
+        public static void SetDefaultKeys()
+        {
+            keyBindings.Clear();
+            keyBindings.Add("directionUp", Keys.W);
+            keyBindings.Add("directionLeft", Keys.A);
+            keyBindings.Add("directionDown", Keys.S);
+            keyBindings.Add("directionRight", Keys.D);
+            keyBindings.Add("hotbar1", Keys.D1);
+            keyBindings.Add("hotbar2", Keys.D2);
+            keyBindings.Add("hotbar3", Keys.D3);
+            keyBindings.Add("hotbar4", Keys.D4);
+            keyBindings.Add("hotbar5", Keys.D5);
+            keyBindings.Add("hotbar6", Keys.D6);
+            keyBindings.Add("hotbar7", Keys.D7);
+            keyBindings.Add("hotbar8", Keys.D8);
+            keyBindings.Add("hotbar9", Keys.D9);
+            keyBindings.Add("hotbar0", Keys.D0);
+            boundKeyStates.Clear();
+            boundKeyPrevious.Clear();
+            foreach (string key in keyBindings.Keys)
+            {
+                boundKeyStates.Add(key, false);
+                boundKeyPrevious.Add(key, false);
+            }
         }
     }
 }

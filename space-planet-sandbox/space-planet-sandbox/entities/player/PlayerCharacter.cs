@@ -18,6 +18,7 @@ namespace space_planet_sandbox.entities.player
         public PlayerCharacter(int startX, int startY)
         {
             hurtBox = new HitBox(startX, startY, 16, 32);
+            sprite = SandboxGame.loadedTextures["unknown"];
             x = startX;
             y = startY;
         }
@@ -33,7 +34,6 @@ namespace space_planet_sandbox.entities.player
             var kstate = Keyboard.GetState();
             double deltaY = 0;
             double deltaX = 0;
-            sprite = SandboxGame.loadedTextures["unknown"];
 
             if (kstate.IsKeyDown(Keys.Up))
                 deltaY -= speed * time.ElapsedGameTime.TotalSeconds;

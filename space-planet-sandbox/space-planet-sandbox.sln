@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "space-planet-sandbox", "space-planet-sandbox\space-planet-sandbox.csproj", "{E9BA0A7A-C104-4A07-BC2E-C3A874FF2FF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "space_planet_sandbox", "space-planet-sandbox\space_planet_sandbox.csproj", "{E9BA0A7A-C104-4A07-BC2E-C3A874FF2FF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
