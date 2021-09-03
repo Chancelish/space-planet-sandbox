@@ -6,7 +6,7 @@ using System.Text;
 
 namespace space_planet_sandbox.gui
 {
-    class PlayerGui
+    public class PlayerGui
     {
         private Texture2D hotbarSprite;
         private int selectedItem;
@@ -39,9 +39,7 @@ namespace space_planet_sandbox.gui
             for (int i = 0; i < 10; i++)
             {
                 if (InputUtils.GetKeyState("hotbar" + i))
-                {
                     selectedItem = i - 1;
-                }
             }
 
             if (InputUtils.previousScrollWheelValue > Mouse.GetState().ScrollWheelValue)

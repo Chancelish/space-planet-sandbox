@@ -14,6 +14,7 @@ namespace space_planet_sandbox
     {
         public static Dictionary<string, Texture2D> loadedTextures = new Dictionary<string, Texture2D>();
         public static SpriteFont defaultFont;
+        public static PlayerGui gui { get; private set; }
 
         public static Camera camera = new Camera();
 
@@ -26,7 +27,6 @@ namespace space_planet_sandbox
         private Texture2D gorilla;
 
         private World testWorld;
-        private PlayerGui gui;
 
         public SandboxGame()
         {
@@ -57,6 +57,7 @@ namespace space_planet_sandbox
             LoadTexture("unknown");
             LoadTexture("ground_tiles_and_plants");
             LoadTexture("hotbarframe");
+            LoadTexture("sand");
 
             defaultFont = Content.Load<SpriteFont>("default");
 
