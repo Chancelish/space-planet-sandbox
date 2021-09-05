@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/Chance/Documents/Programs/space-planet-sandbox/space-planet-sandbox/space-planet-sandbox/Content/hotbarframe.png</SourceFile>
-  <SourceTime>2021-08-26T08:50:48.6536917-06:00</SourceTime>
-  <DestFile>C:/Users/Chance/Documents/Programs/space-planet-sandbox/space-planet-sandbox/space-planet-sandbox/Content/bin/DesktopGL/Content/hotbarframe.xnb</DestFile>
-  <DestTime>2021-08-28T11:59:42.4680494-06:00</DestTime>
+  <SourceFile>C:/Users/jack_/Desktop/Space_Planet_Sandbox/space-planet-sandbox/space-planet-sandbox/Content/hotbarframe.png</SourceFile>
+  <SourceTime>2021-09-05T13:19:10.5524102-07:00</SourceTime>
+  <DestFile>C:/Users/jack_/Desktop/Space_Planet_Sandbox/space-planet-sandbox/space-planet-sandbox/Content/bin/DesktopGL/Content/hotbarframe.xnb</DestFile>
+  <DestTime>2021-09-05T14:36:27.5396977-07:00</DestTime>
   <Importer>TextureImporter</Importer>
-  <ImporterTime>2020-08-10T10:17:54-06:00</ImporterTime>
+  <ImporterTime>2020-08-10T09:17:54-07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
-  <ProcessorTime>2020-08-10T10:17:54-06:00</ProcessorTime>
+  <ProcessorTime>2020-08-10T09:17:54-07:00</ProcessorTime>
   <Parameters>
     <Key>ColorKeyColor</Key>
     <Value>255,0,255,255</Value>
