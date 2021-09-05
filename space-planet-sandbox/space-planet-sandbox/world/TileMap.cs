@@ -60,6 +60,7 @@ namespace space_planet_sandbox.world
                     }
                 }
             }
+            ComputeInitialBiome();
         }
 
         public void Update(int mouseX, int mouseY)
@@ -114,24 +115,30 @@ namespace space_planet_sandbox.world
             return biomeScore[dominantBiome] > biomeThreshold ? dominantBiome : "sky";
         }
 
-        public void AddTile(int xLoc, int yLoc, TileData tile)
+        public bool AddTile(int xLoc, int yLoc, TileData tile)
         {
             // can only place a block if the tile is empty,
             // here or else there must be some indicator of whether a tile can be placed
-            if (tileData[xLoc, yLoc].tileName.Equals(EMPTY))
+            int xTile = (xLoc - originX) / tileSize;
+            int yTile = (yLoc - originY) / tileSize;
+            if (tileData[xTile, yTile].tileName.Equals(EMPTY))
             {
-                tileData[xLoc, yLoc] = tile.Abridge();
-                grid.ChangeTile(xLoc, yLoc, 1);
-                AlterBiomeOnAddition(xLoc, yLoc);
+                tileData[xTile, yTile] = tile.Abridge();
+                grid.ChangeTile(xTile, yTile, 1);
+                AlterBiomeOnAddition(xTile, yTile);
+                return true;
             }
+            return false;
         }
 
-        public void RemoveTile(int xLoc, int yLoc)
+        public bool RemoveTile(int xLoc, int yLoc)
         {
+            int xTile = (xLoc - originX) / tileSize;
+            int yTile = (yLoc - originY) / tileSize;
             // shouldn't get here on empty tile, final safeguard
-            if (tileData[xLoc, yLoc].tileName.Equals(EMPTY)) return;
+            if (tileData[xTile, yTile].tileName.Equals(EMPTY)) return false;
 
-            var biomes = TileDataDictionary.GetTile(tileData[xLoc, yLoc].tileName).biomeTags;
+            var biomes = TileDataDictionary.GetTile(tileData[xTile, yTile].tileName).biomeTags;
 
             foreach (string tag in biomes)
             {
@@ -150,9 +157,9 @@ namespace space_planet_sandbox.world
                     }
                 }
             }
-            tileData[xLoc, yLoc] = TileDataDictionary.GetTile(EMPTY).Abridge();
-            grid.ChangeTile(xLoc, yLoc, 0);
-            // dropItemFromTile();
+            tileData[xTile, yTile] = TileDataDictionary.GetTile(EMPTY).Abridge();
+            grid.ChangeTile(xTile, yTile, 0);
+            return true;
         }
 
         private void ComputeInitialBiome()

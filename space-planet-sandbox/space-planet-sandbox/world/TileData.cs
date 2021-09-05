@@ -17,14 +17,14 @@ namespace space_planet_sandbox.world
     public struct TileData
     {
         public int tileIndex; // the tile in the tileset to draw, if index is somehow larger than the tilesheet, should draw tile
-        public int maxDurability; // the total durability of the tile
-        public int durability; // the total durability of the tile
-        public int toughness; // mining power required to deplete durability
+        public float maxDurability; // the total durability of the tile
+        public float durability; // the total durability of the tile
+        public float toughness; // mining power required to deplete durability
         public TileBehavior behaviorTag; 
         public string tileName; // the texture group to pull from
         public HashSet<String> biomeTags; // any biomes this block can associated, unknown biomes default to plains
 
-        public TileData(int durability, int toughness, TileBehavior behavior, string name, params string[] biomes)
+        public TileData(float durability, float toughness, TileBehavior behavior, string name, params string[] biomes)
         {
             tileIndex = 0;
             this.durability = maxDurability = durability;
@@ -53,9 +53,9 @@ namespace space_planet_sandbox.world
     public struct TileDataAbridged //excludes biome tags to cute down om memory use.
     {
         public int tileIndex;
-        public int maxDurability;
-        public int durability;
-        public int toughness;
+        public float maxDurability;
+        public float durability;
+        public float toughness;
         public string tileName;
         public TileBehavior behaviorTag;
     }
@@ -68,6 +68,7 @@ namespace space_planet_sandbox.world
         {
             knownTiles.Add("empty", new TileData(0, 0, TileBehavior.None, "empty"));
             knownTiles.Add("ground_tiles_and_plants", new TileData(10, 0, TileBehavior.Basic, "ground_tiles_and_plants", "forest", "plains"));
+            knownTiles.Add("sand", new TileData(8, 0, TileBehavior.Sand, "sand", "desert", "beach"));
         }
 
         public static TileData GetTile(string tileType)

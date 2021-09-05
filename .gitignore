@@ -1,6 +1,7 @@
 .vs
 *.logs
 /runtime
+/obj
 *.exe
 *.dll
 *.pdb
@@ -9,4 +10,4 @@
 **/Debug
 *.cache
 *.nget.*
-*.project.assets.json
+*.assets.json

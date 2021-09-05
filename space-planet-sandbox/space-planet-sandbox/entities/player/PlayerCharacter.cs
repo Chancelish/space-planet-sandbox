@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using space_planet_sandbox.collisiondetection;
-using Microsoft.Xna.Framework.Input;
 using space_planet_sandbox.world;
 using System.Collections.Generic;
 
@@ -18,6 +17,7 @@ namespace space_planet_sandbox.entities.player
         public PlayerCharacter(int startX, int startY)
         {
             hurtBox = new HitBox(startX, startY, 16, 32);
+            sprite = SandboxGame.loadedTextures["unknown"];
             x = startX;
             y = startY;
         }
@@ -30,31 +30,37 @@ namespace space_planet_sandbox.entities.player
         {
             SandboxGame.camera.Follow(this, 1280, 720);
             
-            var kstate = Keyboard.GetState();
             double deltaY = 0;
             double deltaX = 0;
-            sprite = SandboxGame.loadedTextures["unknown"];
 
-            if (kstate.IsKeyDown(Keys.Up))
+            if (InputUtils.GetKeyState("directionUp"))
                 deltaY -= speed * time.ElapsedGameTime.TotalSeconds;
 
-            if (kstate.IsKeyDown(Keys.Down))
+            if (InputUtils.GetKeyState("directionDown"))
                 deltaY += speed * time.ElapsedGameTime.TotalSeconds;
 
-            if (kstate.IsKeyDown(Keys.Left))
+            if (InputUtils.GetKeyState("directionLeft"))
                 deltaX -= speed * time.ElapsedGameTime.TotalSeconds;
 
-            if (kstate.IsKeyDown(Keys.Right))
+            if (InputUtils.GetKeyState("directionRight"))
                 deltaX += speed * time.ElapsedGameTime.TotalSeconds;
 
-            int xCheck = (int) (deltaX > 0 ? Math.Ceiling(deltaX) : Math.Floor(deltaX));
-            int yCheck = (int) (deltaY > 0 ? Math.Ceiling(deltaY) : Math.Floor(deltaY));
+            int xCheck = (int) (deltaX + Math.Sign(deltaX));
+            int yCheck = (int) (deltaY + Math.Sign(deltaY));
 
             foreach (var chunk in interSectingChunks)
             {
-                if (Collide(chunk, xCheck, yCheck))
+                if (Collide(chunk, xCheck, 0))
                 {
-                    deltaX = 0; deltaY = 0;
+                    deltaX = 0;
+                    break;
+                }
+            }
+            foreach (var chunk in interSectingChunks)
+            {
+                if (Collide(chunk, 0, yCheck))
+                {
+                    deltaY = 0;
                     break;
                 }
             }
