@@ -54,6 +54,17 @@ namespace space_planet_sandbox.world
             }
         }
 
+        public bool PlaceTile(int x, int y, string blockName)
+        {
+            int xChunk = x / (chunkSize * 16);
+            int yChunk = y / (chunkSize * 16);
+            if (xChunk >= 0 && xChunk < chunkWidth && yChunk >= 0 && yChunk < chunkHeight)
+            {
+                return chunks[xChunk, yChunk].AddTile(x, y, TileDataDictionary.GetTile(blockName));
+            }
+            return false;
+        }
+
         public void Update(GameTime gameTime)
         {
             if (InputUtils.LeftMouseClicked)
@@ -61,11 +72,9 @@ namespace space_planet_sandbox.world
                 var mousePosition = Mouse.GetState().Position;
                 int realMouseX = mousePosition.X + SandboxGame.camera.x;
                 int realMouseY = mousePosition.Y + SandboxGame.camera.y;
-                int xChunk = realMouseX / (chunkSize * 16);
-                int yChunk = realMouseY / (chunkSize * 16);
-                if (xChunk >= 0 && xChunk < chunkWidth && yChunk >= 0 && yChunk < chunkHeight)
+                if (SandboxGame.gui.GetHighlightedItem() != null)
                 {
-                    chunks[xChunk, yChunk].Update(realMouseX, realMouseY);
+                    SandboxGame.gui.GetHighlightedItem().OnUse(new Point(realMouseX, realMouseY), player, this);
                 }
             }
 

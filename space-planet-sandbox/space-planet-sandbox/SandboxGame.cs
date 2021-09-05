@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 using space_planet_sandbox.world;
-using space_planet_sandbox.entities.player;
 using space_planet_sandbox.rendering;
 using space_planet_sandbox.gui;
 
@@ -58,6 +57,7 @@ namespace space_planet_sandbox
             LoadTexture("ground_tiles_and_plants");
             LoadTexture("hotbarframe");
             LoadTexture("sand");
+            LoadTexture("temppickaxeicon");
 
             defaultFont = Content.Load<SpriteFont>("default");
 
