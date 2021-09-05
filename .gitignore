@@ -11,3 +11,5 @@
 *.cache
 *.nget.*
 *.assets.json
+*.mgcontent
+*.props
