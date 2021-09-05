@@ -16,6 +16,7 @@ namespace space_planet_sandbox.world
         private readonly int chunkWidth;
         private readonly int chunkHeight;
         private readonly int chunkSize;
+        private readonly int tileSize;
 
         private readonly int tileWorldWidth;
         private readonly int pixelWorldWidth;
@@ -31,12 +32,13 @@ namespace space_planet_sandbox.world
             chunkWidth = width;
             chunkHeight = height;
             chunkSize = size;
+            tileSize = 16;
 
             tileWorldWidth = width * size;
             tileWorldHeight = height * size;
 
-            pixelWorldWidth = tileWorldWidth * 16;
-            pixelWorldHeight = tileWorldHeight * 16;
+            pixelWorldWidth = tileWorldWidth * tileSize;
+            pixelWorldHeight = tileWorldHeight * tileSize;
 
             player = new PlayerCharacter(50, 50);
 
@@ -49,15 +51,15 @@ namespace space_planet_sandbox.world
             {
                 for (int iy = 0; iy < height; iy++)
                 {
-                    chunks[ix, iy] = new TileMap(16, size, size, ix * size * 16, iy * size * 16);
+                    chunks[ix, iy] = new TileMap(tileSize, size, size, ix * size * tileSize, iy * size * tileSize);
                 }
             }
         }
 
         public bool PlaceTile(int x, int y, string blockName)
         {
-            int xChunk = x / (chunkSize * 16);
-            int yChunk = y / (chunkSize * 16);
+            int xChunk = x / (chunkSize * tileSize);
+            int yChunk = y / (chunkSize * tileSize);
             if (x >= 0 && xChunk < chunkWidth && y >= 0 && yChunk < chunkHeight)
             {
                 return chunks[xChunk, yChunk].AddTile(x, y, TileDataDictionary.GetTile(blockName));
@@ -67,8 +69,8 @@ namespace space_planet_sandbox.world
 
         public bool MineTile(int x, int y, float miningPower)
         {
-            int xChunk = x / (chunkSize * 16);
-            int yChunk = y / (chunkSize * 16);
+            int xChunk = x / (chunkSize * tileSize);
+            int yChunk = y / (chunkSize * tileSize);
             if (x >= 0 && xChunk < chunkWidth && y >= 0 && yChunk < chunkHeight)
             {
                 return chunks[xChunk, yChunk].RemoveTile(x, y);
@@ -78,6 +80,8 @@ namespace space_planet_sandbox.world
 
         public void Update(GameTime gameTime)
         {
+            PreUpdate();
+            
             if (InputUtils.LeftMouseClicked)
             {
                 var mousePosition = Mouse.GetState().Position;
@@ -90,10 +94,10 @@ namespace space_planet_sandbox.world
             }
 
             player.interSectingChunks = new List<TileMap>();
-            int x1 = ((int) player.Position().X) / (chunkSize * 16);
-            int y1 = ((int) player.Position().Y) / (chunkSize * 16);
-            int x2 = ((int) (player.Position().X + 16)) / (chunkSize * 16);
-            int y2 = ((int) (player.Position().Y + 32)) / (chunkSize * 16);
+            int x1 = ((int) player.Position().X) / (chunkSize * tileSize);
+            int y1 = ((int) player.Position().Y) / (chunkSize * tileSize);
+            int x2 = ((int) (player.Position().X + tileSize)) / (chunkSize * tileSize);
+            int y2 = ((int) (player.Position().Y + 32)) / (chunkSize * tileSize);
             for (int i = Math.Max(x1, 0); i <= Math.Min(x2, chunkWidth - 1); i++)
             {
                 for (int j = Math.Max(y1, 0); j <= Math.Min(y2, chunkHeight - 1); j++)
@@ -106,6 +110,8 @@ namespace space_planet_sandbox.world
             {
                 entity.Update(gameTime);
             }
+
+            PostUpdate();
         }
 
         public void Render(SpriteBatch graphics)
@@ -119,6 +125,16 @@ namespace space_planet_sandbox.world
             }
 
             player.Render(graphics);
+        }
+
+        private void PreUpdate()
+        {
+
+        }
+
+        private void PostUpdate()
+        {
+
         }
     }
 }
