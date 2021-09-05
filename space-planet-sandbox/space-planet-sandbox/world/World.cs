@@ -58,7 +58,7 @@ namespace space_planet_sandbox.world
         {
             int xChunk = x / (chunkSize * 16);
             int yChunk = y / (chunkSize * 16);
-            if (xChunk >= 0 && xChunk < chunkWidth && yChunk >= 0 && yChunk < chunkHeight)
+            if (x >= 0 && xChunk < chunkWidth && y >= 0 && yChunk < chunkHeight)
             {
                 return chunks[xChunk, yChunk].AddTile(x, y, TileDataDictionary.GetTile(blockName));
             }
@@ -69,7 +69,7 @@ namespace space_planet_sandbox.world
         {
             int xChunk = x / (chunkSize * 16);
             int yChunk = y / (chunkSize * 16);
-            if (xChunk >= 0 && xChunk < chunkWidth && yChunk >= 0 && yChunk < chunkHeight)
+            if (x >= 0 && xChunk < chunkWidth && y >= 0 && yChunk < chunkHeight)
             {
                 return chunks[xChunk, yChunk].RemoveTile(x, y);
             }
