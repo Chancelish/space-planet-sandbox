@@ -65,6 +65,17 @@ namespace space_planet_sandbox.world
             return false;
         }
 
+        public bool MineTile(int x, int y, float miningPower)
+        {
+            int xChunk = x / (chunkSize * 16);
+            int yChunk = y / (chunkSize * 16);
+            if (xChunk >= 0 && xChunk < chunkWidth && yChunk >= 0 && yChunk < chunkHeight)
+            {
+                return chunks[xChunk, yChunk].RemoveTile(x, y);
+            }
+            return false;
+        }
+
         public void Update(GameTime gameTime)
         {
             if (InputUtils.LeftMouseClicked)

@@ -17,6 +17,8 @@ namespace space_planet_sandbox.gui
         {
             hotbarSprite = SandboxGame.loadedTextures["hotbarframe"];
             selectedItem = 0;
+            itemsOnHotbar[1] = new InventoryPickaxe();
+            itemsOnHotbar[2] = new InventoryBlock("ground_tiles_and_plants", 1000, 64);
             itemsOnHotbar[3] = new InventoryBlock("sand", 1000, 32);
         }
 
@@ -65,7 +67,7 @@ namespace space_planet_sandbox.gui
             {
                 selectedItem += 10;
             }
-            if (selectedItem > 10)
+            if (selectedItem >= 10)
             {
                 selectedItem -= 10;
             }
