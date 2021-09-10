@@ -14,6 +14,8 @@ namespace space_planet_sandbox.entities.player
         private Texture2D sprite;
         public List<TileMap> interSectingChunks;
 
+        private Texture2D boxOutline;
+
         public PlayerCharacter(int startX, int startY)
         {
             hurtBox = new HitBox(startX, startY, 16, 32);
@@ -52,7 +54,15 @@ namespace space_planet_sandbox.entities.player
             {
                 if (Collide(chunk, xCheck, 0))
                 {
-                    deltaX = 0;
+                    while (xCheck != 0)
+                    {
+                        xCheck = xCheck > 0 ? xCheck - 1 : xCheck + 1;
+                        deltaX = xCheck;
+                        if (!Collide(chunk, xCheck, 0))
+                        {
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -60,7 +70,15 @@ namespace space_planet_sandbox.entities.player
             {
                 if (Collide(chunk, 0, yCheck))
                 {
-                    deltaY = 0;
+                    while (yCheck != 0)
+                    {
+                        yCheck = yCheck > 0 ? yCheck - 1 : yCheck + 1;
+                        deltaY = yCheck;
+                        if (!Collide(chunk, 0, yCheck))
+                        {
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -72,6 +90,13 @@ namespace space_planet_sandbox.entities.player
 
         public void Render(SpriteBatch graphics)
         {
+            if (boxOutline == null)
+            {
+                boxOutline = new Texture2D(graphics.GraphicsDevice, 1, 1);
+                boxOutline.SetData(new[] { Color.White });
+            }
+            graphics.Draw(boxOutline, new Rectangle((int) x, (int) y, 16, 32), Color.LightGreen);
+
             graphics.Draw(sprite,
                 new Vector2(x, y),
                 null,
@@ -81,6 +106,11 @@ namespace space_planet_sandbox.entities.player
                 Vector2.One,
                 SpriteEffects.None,
                 0f);
+        }
+
+        public override Point GetWidth()
+        {
+            return hurtBox.Size();
         }
     }
 }

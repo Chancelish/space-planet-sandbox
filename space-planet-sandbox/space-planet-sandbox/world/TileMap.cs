@@ -162,6 +162,11 @@ namespace space_planet_sandbox.world
             return true;
         }
 
+        public override Point GetWidth()
+        {
+            return new Point(tileSize * tileWidth, tileSize * tileHeight);
+        }
+
         private void ComputeInitialBiome()
         {
             for (int ix = 0; ix < tileWidth; ix++)

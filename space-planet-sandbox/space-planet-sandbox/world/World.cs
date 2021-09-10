@@ -19,13 +19,17 @@ namespace space_planet_sandbox.world
         private readonly int tileSize;
 
         private readonly int tileWorldWidth;
-        private readonly int pixelWorldWidth;
+        public readonly int pixelWorldWidth;
         private readonly int tileWorldHeight;
-        private readonly int pixelWorldHeight;
+        public readonly int pixelWorldHeight;
 
         private TileMap[,] chunks;
+        private List<CollidableEntity>[,] activeRegion;
 
         private PlayerCharacter player;
+
+        private int xChunkMain;
+        private int yChunkMain;
 
         public World(int width, int height, int size = 32)
         {
@@ -46,6 +50,16 @@ namespace space_planet_sandbox.world
             entities.Add(player);
 
             chunks = new TileMap[width, height];
+
+            activeRegion = new List<CollidableEntity>[7, 7];
+
+            for (int ix = 0; ix < 7; ix ++)
+            {
+                for (int iy = 0; iy < 7; iy++)
+                {
+                    activeRegion[ix, iy] = new List<CollidableEntity>();
+                }
+            }
 
             for (int ix = 0; ix < width; ix++)
             {
@@ -82,7 +96,7 @@ namespace space_planet_sandbox.world
         {
             PreUpdate();
             
-            if (InputUtils.LeftMouseClicked)
+            if (InputUtils.LeftMouse)
             {
                 var mousePosition = Mouse.GetState().Position;
                 int realMouseX = mousePosition.X + SandboxGame.camera.x;
@@ -108,7 +122,7 @@ namespace space_planet_sandbox.world
 
             foreach (var entity in entities)
             {
-                entity.Update(gameTime);
+                if (entity.isActive) entity.Update(gameTime);
             }
 
             PostUpdate();
@@ -129,12 +143,67 @@ namespace space_planet_sandbox.world
 
         private void PreUpdate()
         {
-
+            var playerPostion = player.Position();
+            xChunkMain = (int) Math.Floor(playerPostion.X / (chunkSize * tileSize));
+            yChunkMain = (int) Math.Floor(playerPostion.Y / (chunkSize * tileSize));
+            for (int j = 0; j < 7; j++)
+            {
+                int jthIndex = yChunkMain - 3 + j;
+                if (jthIndex < 0 || jthIndex >= chunkHeight)
+                {
+                    continue;
+                }
+                for (int i = 0; i < 7; i++)
+                {
+                    int ithIndex = xChunkMain - 3 + i;
+                    if (ithIndex < 0) ithIndex += chunkWidth;
+                    if (ithIndex >= chunkWidth) ithIndex -= chunkWidth;
+                    activeRegion[i, j].Add(chunks[ithIndex, jthIndex]);
+                }
+            }
+            foreach (CollidableEntity entity in entities)
+            {
+                entity.isActive = IsEntityActive(entity);
+                
+            }
         }
 
         private void PostUpdate()
         {
+            for (int ix = 0; ix < 7; ix++)
+            {
+                for (int iy = 0; iy < 7; iy++)
+                {
+                    activeRegion[ix, iy].Clear();
+                }
+            }
+        }
 
+        private bool IsEntityActive(CollidableEntity entity)
+        {
+            int leftChunk = (int)Math.Floor(entity.Position().X / (chunkSize * tileSize));
+            int topChunk = (int)Math.Floor(entity.Position().Y / (chunkSize * tileSize));
+            int rightChunk = (int)Math.Floor((entity.Position().X + entity.GetWidth().X) / (chunkSize * tileSize));
+            int bottomChunk = (int)Math.Floor((entity.Position().Y + entity.GetWidth().Y) / (chunkSize * tileSize));
+            if (rightChunk >= xChunkMain - 3
+                && leftChunk <= xChunkMain + 3
+                && topChunk <= Math.Min(chunkHeight - 1, yChunkMain + 3)
+                && bottomChunk >= Math.Max(0, yChunkMain - 3))
+            {
+                int leftIndex = leftChunk - xChunkMain + 3;
+                int rightIndex = rightChunk - xChunkMain + 3;
+                int topIndex = topChunk - yChunkMain + 3;
+                int bottomIndex = bottomChunk - yChunkMain + 3;
+                for (int i = leftIndex; i <= rightIndex; i++)
+                {
+                    for (int j = topIndex; j <= bottomIndex; j++)
+                    {
+                        activeRegion[i, j].Add(entity);
+                    }
+                }
+                return true;
+            }
+            return false;
         }
     }
 }

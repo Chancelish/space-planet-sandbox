@@ -27,6 +27,11 @@ namespace space_planet_sandbox.entities.environment
             return hitBox;
         }
 
+        public override Point GetWidth()
+        {
+            return hitBox.Size();
+        }
+
         public override void Update(GameTime time)
         {
             float deltaT = (float)time.ElapsedGameTime.TotalSeconds;

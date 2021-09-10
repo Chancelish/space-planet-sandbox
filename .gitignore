@@ -1,7 +1,7 @@
 .vs
 *.logs
 /runtime
-/obj
+**/obj
 *.exe
 *.dll
 *.pdb

@@ -137,10 +137,10 @@ namespace space_planet_sandbox.collisiondetection
         {
             var upperLeft = rectangle.Location - zeroOrigin;
             var lowerRight = upperLeft + rectangle.Size;
-            var ix = Math.Max(0, upperLeft.X / tileSize);
-            var fx = Math.Min(gridWidth - 1, lowerRight.X / tileSize);
-            var iy = Math.Max(0, upperLeft.Y / tileSize);
-            var fy = Math.Min(gridHeight - 1, lowerRight.Y / tileSize);
+            int ix = Math.Max(0, upperLeft.X / tileSize);
+            int fx = Math.Min(gridWidth - 1, (lowerRight.X - 1) / tileSize);
+            int iy = Math.Max(0, upperLeft.Y / tileSize);
+            int fy = Math.Min(gridHeight - 1, (lowerRight.Y - 1) / tileSize);
             for (int i = ix; i <= fx; i++)
             {
                 for (int j = iy; j <= fy; j++)

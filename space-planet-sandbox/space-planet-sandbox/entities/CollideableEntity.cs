@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using space_planet_sandbox.collisiondetection;
+using space_planet_sandbox.world;
 
 namespace space_planet_sandbox.entities
 {
@@ -7,6 +8,9 @@ namespace space_planet_sandbox.entities
     {
         protected float x;
         protected float y;
+
+        protected World myWorld;
+        public bool isActive;
 
         public abstract ICollisionMask GetCollisionMask();
 
@@ -20,6 +24,13 @@ namespace space_planet_sandbox.entities
         public Vector2 Position()
         {
             return new Vector2(x, y);
+        }
+
+        public abstract Point GetWidth();
+
+        public void setWorld(World world)
+        {
+            myWorld = world;
         }
     }
 }
