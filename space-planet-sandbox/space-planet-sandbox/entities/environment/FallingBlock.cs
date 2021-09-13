@@ -11,15 +11,19 @@ namespace space_planet_sandbox.entities.environment
     {
         private HitBox hitBox;
         private Texture2D sprite;
+        private string blockName;
         private float speed = 0f;
-        private float terminalVelocity = 250f;
-        private float gravity = 30f;
+        private float terminalVelocity = 400f;
+        private float gravity = 60f;
 
         public FallingBlock(float initX, float initY, string blockName)
         {
             x = initX;
             y = initY;
             sprite = SandboxGame.loadedTextures[blockName];
+            this.blockName = blockName;
+            collisionGroup = "solid";
+            hitBox = new HitBox((int)x, (int)y, 16, 16);
         }
 
         public override ICollisionMask GetCollisionMask()
@@ -40,8 +44,33 @@ namespace space_planet_sandbox.entities.environment
             {
                 speed = terminalVelocity;
             }
-            y += terminalVelocity;
-            // if collide solid, go back to static block.
+            y += speed * deltaT;
+            hitBox.MoveTo((int)x, (int)y);
+            var possibleCollisions = myWorld.GetPotentialCollisions((int)x, (int)y, hitBox.Size().X, hitBox.Size().Y);
+            if (possibleCollisions.ContainsKey("tiles"))
+            {
+                foreach (var chunk in possibleCollisions["tiles"])
+                {
+                    if (Collide(chunk, 0, 0))
+                    {
+                        flaggedForRemoval = true;
+                        myWorld.PlaceTile((int)x, (int)y, blockName);
+                    }
+                }
+            }
+        }
+
+        public override void Render(SpriteBatch graphics)
+        {
+            graphics.Draw(sprite,
+                new Vector2(x, y),
+                null,
+                Color.White,
+                0f,
+                new Vector2(0, 0),
+                Vector2.One,
+                SpriteEffects.None,
+                0f);
         }
     }
 }

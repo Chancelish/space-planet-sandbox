@@ -12,7 +12,6 @@ namespace space_planet_sandbox.entities.player
         private HitBox hurtBox;
         private float speed = 200.0f;
         private Texture2D sprite;
-        public List<TileMap> interSectingChunks;
 
         private Texture2D boxOutline;
 
@@ -22,6 +21,7 @@ namespace space_planet_sandbox.entities.player
             sprite = SandboxGame.loadedTextures["unknown"];
             x = startX;
             y = startY;
+            collisionGroup = "player";
         }
         public override ICollisionMask GetCollisionMask()
         {
@@ -31,6 +31,8 @@ namespace space_planet_sandbox.entities.player
         public override void Update(GameTime time)
         {
             SandboxGame.camera.Follow(this, 1280, 720);
+
+            var possibleCollisions = myWorld.GetPotentialCollisions((int) x, (int) y, hurtBox.Size().X, hurtBox.Size().Y);
             
             double deltaY = 0;
             double deltaX = 0;
@@ -50,36 +52,39 @@ namespace space_planet_sandbox.entities.player
             int xCheck = (int) (deltaX + Math.Sign(deltaX));
             int yCheck = (int) (deltaY + Math.Sign(deltaY));
 
-            foreach (var chunk in interSectingChunks)
+            if (possibleCollisions.ContainsKey("tiles"))
             {
-                if (Collide(chunk, xCheck, 0))
+                foreach (var chunk in possibleCollisions["tiles"])
                 {
-                    while (xCheck != 0)
+                    if (Collide(chunk, xCheck, 0))
                     {
-                        xCheck = xCheck > 0 ? xCheck - 1 : xCheck + 1;
-                        deltaX = xCheck;
-                        if (!Collide(chunk, xCheck, 0))
+                        while (xCheck != 0)
                         {
-                            break;
+                            xCheck = xCheck > 0 ? xCheck - 1 : xCheck + 1;
+                            deltaX = xCheck;
+                            if (!Collide(chunk, xCheck, 0))
+                            {
+                                break;
+                            }
                         }
+                        break;
                     }
-                    break;
                 }
-            }
-            foreach (var chunk in interSectingChunks)
-            {
-                if (Collide(chunk, 0, yCheck))
+                foreach (var chunk in possibleCollisions["tiles"])
                 {
-                    while (yCheck != 0)
+                    if (Collide(chunk, 0, yCheck))
                     {
-                        yCheck = yCheck > 0 ? yCheck - 1 : yCheck + 1;
-                        deltaY = yCheck;
-                        if (!Collide(chunk, 0, yCheck))
+                        while (yCheck != 0)
                         {
-                            break;
+                            yCheck = yCheck > 0 ? yCheck - 1 : yCheck + 1;
+                            deltaY = yCheck;
+                            if (!Collide(chunk, 0, yCheck))
+                            {
+                                break;
+                            }
                         }
+                        break;
                     }
-                    break;
                 }
             }
 
@@ -88,7 +93,7 @@ namespace space_planet_sandbox.entities.player
             hurtBox.MoveTo((int) x, (int) y);
         }
 
-        public void Render(SpriteBatch graphics)
+        public override void Render(SpriteBatch graphics)
         {
             if (boxOutline == null)
             {

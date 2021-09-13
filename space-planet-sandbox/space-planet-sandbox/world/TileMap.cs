@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using space_planet_sandbox.collisiondetection;
 using space_planet_sandbox.entities;
+using space_planet_sandbox.entities.environment;
 
 namespace space_planet_sandbox.world
 {
@@ -36,6 +37,7 @@ namespace space_planet_sandbox.world
             biomeScore.Add("sky", 0);
             dominantBiome = "sky";
             biomeThreshold = 2 * (width + height);
+            collisionGroup = "tiles";
 
             Random tileChooser = new Random();
             for (int ix = 0; ix < width; ix++)
@@ -83,12 +85,27 @@ namespace space_planet_sandbox.world
             }
         }
 
-        // actually fine for now, liquids and sand tiles have to be figured out eventually
         public override void Update(GameTime time)
         {
-            
+            for (int ix = 0; ix < tileWidth; ix++)
+            {
+                for (int iy = 0; iy < tileHeight; iy++)
+                {
+                    if (tileData[ix, iy].behaviorTag == TileBehavior.Sand)
+                    {
+                        int xLocBelow = ix * tileSize + originX + 8;
+                        int yLocBelow = iy * tileSize + originY + 24;
+                        if (myWorld.GetTileAt(xLocBelow, yLocBelow).tileName == "empty" || myWorld.GetTileAt(xLocBelow, yLocBelow).behaviorTag == TileBehavior.Liquid)
+                        {
+                            myWorld.AddEntity(new FallingBlock(xLocBelow - 8, yLocBelow - 24, tileData[ix, iy].tileName));
+                            RemoveTile(xLocBelow, yLocBelow - 16);
+                        }
+                    }
+                }
+            }
         }
-        public void Render(SpriteBatch graphics)
+
+        public override void Render(SpriteBatch graphics)
         {
             for (int ix = 0; ix < tileWidth; ix++)
             {
@@ -160,6 +177,18 @@ namespace space_planet_sandbox.world
             tileData[xTile, yTile] = TileDataDictionary.GetTile(EMPTY).Abridge();
             grid.ChangeTile(xTile, yTile, 0);
             return true;
+        }
+
+        public TileDataAbridged GetTileAt(int xLoc, int yLoc)
+        {
+            int xTile = (xLoc - originX) / tileSize;
+            int yTile = (yLoc - originY) / tileSize;
+
+            if (xTile >= 0 && yTile >= 0 && xTile < tileWidth && yTile < tileHeight)
+            {
+                return tileData[xTile, yTile];
+            }
+            return TileDataDictionary.GetTile("empty").Abridge();
         }
 
         public override Point GetWidth()

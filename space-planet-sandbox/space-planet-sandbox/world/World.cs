@@ -17,6 +17,7 @@ namespace space_planet_sandbox.world
         private readonly int chunkHeight;
         private readonly int chunkSize;
         private readonly int tileSize;
+        private readonly int chunkPixelSize;
 
         private readonly int tileWorldWidth;
         public readonly int pixelWorldWidth;
@@ -37,6 +38,7 @@ namespace space_planet_sandbox.world
             chunkHeight = height;
             chunkSize = size;
             tileSize = 16;
+            chunkPixelSize = (chunkSize * tileSize);
 
             tileWorldWidth = width * size;
             tileWorldHeight = height * size;
@@ -47,7 +49,7 @@ namespace space_planet_sandbox.world
             player = new PlayerCharacter(50, 50);
 
             entities = new List<CollidableEntity>();
-            entities.Add(player);
+            AddEntity(player);
 
             chunks = new TileMap[width, height];
 
@@ -66,14 +68,15 @@ namespace space_planet_sandbox.world
                 for (int iy = 0; iy < height; iy++)
                 {
                     chunks[ix, iy] = new TileMap(tileSize, size, size, ix * size * tileSize, iy * size * tileSize);
+                    chunks[ix, iy].SetWorld(this);
                 }
             }
         }
 
         public bool PlaceTile(int x, int y, string blockName)
         {
-            int xChunk = x / (chunkSize * tileSize);
-            int yChunk = y / (chunkSize * tileSize);
+            int xChunk = x / chunkPixelSize;
+            int yChunk = y / chunkPixelSize;
             if (x >= 0 && xChunk < chunkWidth && y >= 0 && yChunk < chunkHeight)
             {
                 return chunks[xChunk, yChunk].AddTile(x, y, TileDataDictionary.GetTile(blockName));
@@ -83,8 +86,8 @@ namespace space_planet_sandbox.world
 
         public bool MineTile(int x, int y, float miningPower)
         {
-            int xChunk = x / (chunkSize * tileSize);
-            int yChunk = y / (chunkSize * tileSize);
+            int xChunk = x / chunkPixelSize;
+            int yChunk = y / chunkPixelSize;
             if (x >= 0 && xChunk < chunkWidth && y >= 0 && yChunk < chunkHeight)
             {
                 return chunks[xChunk, yChunk].RemoveTile(x, y);
@@ -107,16 +110,19 @@ namespace space_planet_sandbox.world
                 }
             }
 
-            player.interSectingChunks = new List<TileMap>();
-            int x1 = ((int) player.Position().X) / (chunkSize * tileSize);
-            int y1 = ((int) player.Position().Y) / (chunkSize * tileSize);
-            int x2 = ((int) (player.Position().X + tileSize)) / (chunkSize * tileSize);
-            int y2 = ((int) (player.Position().Y + 32)) / (chunkSize * tileSize);
-            for (int i = Math.Max(x1, 0); i <= Math.Min(x2, chunkWidth - 1); i++)
+            for (int j = 0; j < 7; j++)
             {
-                for (int j = Math.Max(y1, 0); j <= Math.Min(y2, chunkHeight - 1); j++)
+                int jthIndex = yChunkMain - 3 + j;
+                if (jthIndex < 0 || jthIndex >= chunkHeight)
                 {
-                    player.interSectingChunks.Add(chunks[i, j]);
+                    continue;
+                }
+                for (int i = 0; i < 7; i++)
+                {
+                    int ithIndex = xChunkMain - 3 + i;
+                    if (ithIndex < 0) ithIndex += chunkWidth;
+                    if (ithIndex >= chunkWidth) ithIndex -= chunkWidth;
+                    chunks[ithIndex, jthIndex].Update(gameTime);
                 }
             }
 
@@ -138,14 +144,58 @@ namespace space_planet_sandbox.world
                 }
             }
 
-            player.Render(graphics);
+            foreach (var entity in entities)
+            {
+                entity.Render(graphics);
+            }
+        }
+
+        public void AddEntity(CollidableEntity entity)
+        {
+            entities.Add(entity);
+            entity.SetWorld(this);
+        }
+
+        public Dictionary<String, HashSet<CollidableEntity>> GetPotentialCollisions(int x, int y, int width, int height)
+        {
+            Dictionary<String, HashSet<CollidableEntity>> possibleCollisions = new Dictionary<String, HashSet<CollidableEntity>>();
+            var x1Chunk = Math.Max(x / chunkPixelSize - xChunkMain + 3, 0);
+            var x2Chunk = Math.Min((x + width) / chunkPixelSize - xChunkMain + 3, 6);
+            var y1Chunk = Math.Max(y / chunkPixelSize - yChunkMain + 3, 0);
+            var y2Chunk = Math.Min((y + height) / chunkPixelSize - yChunkMain + 3, 6);
+            for (int i = x1Chunk; i <= x2Chunk; i++)
+            {
+                for (int j = y1Chunk; j <= y2Chunk; j++)
+                {
+                    foreach (CollidableEntity entity in activeRegion[i, j])
+                    {
+                        if (!possibleCollisions.ContainsKey(entity.collisionGroup))
+                        {
+                            possibleCollisions.Add(entity.collisionGroup, new HashSet<CollidableEntity>());
+                        }
+                        possibleCollisions[entity.collisionGroup].Add(entity);
+                    }
+                }
+            }
+            return possibleCollisions;
+        }
+
+        public TileDataAbridged GetTileAt(int x, int y)
+        {
+            int xChunk = x / chunkPixelSize;
+            int yChunk = y / chunkPixelSize;
+            if (x >= 0 && xChunk < chunkWidth && y >= 0 && yChunk < chunkHeight)
+            {
+                return chunks[xChunk, yChunk].GetTileAt(x, y);
+            }
+            return TileDataDictionary.GetTile("empty").Abridge();
         }
 
         private void PreUpdate()
         {
             var playerPostion = player.Position();
-            xChunkMain = (int) Math.Floor(playerPostion.X / (chunkSize * tileSize));
-            yChunkMain = (int) Math.Floor(playerPostion.Y / (chunkSize * tileSize));
+            xChunkMain = (int) Math.Floor(playerPostion.X / chunkPixelSize);
+            yChunkMain = (int) Math.Floor(playerPostion.Y / chunkPixelSize);
             for (int j = 0; j < 7; j++)
             {
                 int jthIndex = yChunkMain - 3 + j;
@@ -177,23 +227,24 @@ namespace space_planet_sandbox.world
                     activeRegion[ix, iy].Clear();
                 }
             }
+            entities.RemoveAll(entity => entity.flaggedForRemoval);
         }
 
         private bool IsEntityActive(CollidableEntity entity)
         {
-            int leftChunk = (int)Math.Floor(entity.Position().X / (chunkSize * tileSize));
-            int topChunk = (int)Math.Floor(entity.Position().Y / (chunkSize * tileSize));
-            int rightChunk = (int)Math.Floor((entity.Position().X + entity.GetWidth().X) / (chunkSize * tileSize));
-            int bottomChunk = (int)Math.Floor((entity.Position().Y + entity.GetWidth().Y) / (chunkSize * tileSize));
+            int leftChunk = (int)Math.Floor(entity.Position().X / chunkPixelSize);
+            int topChunk = (int)Math.Floor(entity.Position().Y / chunkPixelSize);
+            int rightChunk = (int)Math.Floor((entity.Position().X + entity.GetWidth().X) / chunkPixelSize);
+            int bottomChunk = (int)Math.Floor((entity.Position().Y + entity.GetWidth().Y) / chunkPixelSize);
             if (rightChunk >= xChunkMain - 3
                 && leftChunk <= xChunkMain + 3
                 && topChunk <= Math.Min(chunkHeight - 1, yChunkMain + 3)
                 && bottomChunk >= Math.Max(0, yChunkMain - 3))
             {
-                int leftIndex = leftChunk - xChunkMain + 3;
-                int rightIndex = rightChunk - xChunkMain + 3;
-                int topIndex = topChunk - yChunkMain + 3;
-                int bottomIndex = bottomChunk - yChunkMain + 3;
+                int leftIndex = Math.Max(leftChunk - xChunkMain + 3, 0);
+                int rightIndex = Math.Min(rightChunk - xChunkMain + 3, 6);
+                int topIndex = Math.Max(topChunk - yChunkMain + 3, 0);
+                int bottomIndex = Math.Min(bottomChunk - yChunkMain + 3, 6);
                 for (int i = leftIndex; i <= rightIndex; i++)
                 {
                     for (int j = topIndex; j <= bottomIndex; j++)
