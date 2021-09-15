@@ -191,7 +191,7 @@ namespace space_planet_sandbox.world
             return TileDataDictionary.GetTile("empty").Abridge();
         }
 
-        public override Point GetWidth()
+        public override Point GetSize()
         {
             return new Point(tileSize * tileWidth, tileSize * tileHeight);
         }

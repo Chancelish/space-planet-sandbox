@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using space_planet_sandbox.entities.player;
 using System;
 using Microsoft.Xna.Framework.Graphics;
+using space_planet_sandbox.entities.environment;
 
 namespace space_planet_sandbox.world
 {
@@ -28,6 +29,7 @@ namespace space_planet_sandbox.world
         private List<CollidableEntity>[,] activeRegion;
 
         private PlayerCharacter player;
+        private BlockPreview blockPreview;
 
         private int xChunkMain;
         private int yChunkMain;
@@ -47,6 +49,8 @@ namespace space_planet_sandbox.world
             pixelWorldHeight = tileWorldHeight * tileSize;
 
             player = new PlayerCharacter(50, 50);
+            blockPreview = new BlockPreview(tileSize);
+            blockPreview.SetWorld(this);
 
             entities = new List<CollidableEntity>();
             AddEntity(player);
@@ -71,6 +75,11 @@ namespace space_planet_sandbox.world
                     chunks[ix, iy].SetWorld(this);
                 }
             }
+        }
+
+        public bool IsPlacementBlocked()
+        {
+            return blockPreview.placementBlocked;
         }
 
         public bool PlaceTile(int x, int y, string blockName)
@@ -98,13 +107,16 @@ namespace space_planet_sandbox.world
         public void Update(GameTime gameTime)
         {
             PreUpdate();
+
+            var mousePosition = Mouse.GetState().Position;
+            int realMouseX = mousePosition.X + SandboxGame.camera.x;
+            int realMouseY = mousePosition.Y + SandboxGame.camera.y;
             
-            if (InputUtils.LeftMouse)
+            if (SandboxGame.gui.GetHighlightedItem() != null)
             {
-                var mousePosition = Mouse.GetState().Position;
-                int realMouseX = mousePosition.X + SandboxGame.camera.x;
-                int realMouseY = mousePosition.Y + SandboxGame.camera.y;
-                if (SandboxGame.gui.GetHighlightedItem() != null)
+                blockPreview.UpdatePosition(realMouseX, realMouseY);
+                blockPreview.Update(gameTime);
+                if (InputUtils.LeftMouse)
                 {
                     SandboxGame.gui.GetHighlightedItem().OnUse(new Point(realMouseX, realMouseY), player, this);
                 }
@@ -130,7 +142,6 @@ namespace space_planet_sandbox.world
             {
                 if (entity.isActive) entity.Update(gameTime);
             }
-
             PostUpdate();
         }
 
@@ -146,8 +157,12 @@ namespace space_planet_sandbox.world
 
             foreach (var entity in entities)
             {
-                entity.Render(graphics);
+                if (entity.isActive)
+                {
+                    entity.Render(graphics);
+                }
             }
+            blockPreview.Render(graphics);
         }
 
         public void AddEntity(CollidableEntity entity)
@@ -234,8 +249,8 @@ namespace space_planet_sandbox.world
         {
             int leftChunk = (int)Math.Floor(entity.Position().X / chunkPixelSize);
             int topChunk = (int)Math.Floor(entity.Position().Y / chunkPixelSize);
-            int rightChunk = (int)Math.Floor((entity.Position().X + entity.GetWidth().X) / chunkPixelSize);
-            int bottomChunk = (int)Math.Floor((entity.Position().Y + entity.GetWidth().Y) / chunkPixelSize);
+            int rightChunk = (int)Math.Floor((entity.Position().X + entity.GetSize().X) / chunkPixelSize);
+            int bottomChunk = (int)Math.Floor((entity.Position().Y + entity.GetSize().Y) / chunkPixelSize);
             if (rightChunk >= xChunkMain - 3
                 && leftChunk <= xChunkMain + 3
                 && topChunk <= Math.Min(chunkHeight - 1, yChunkMain + 3)

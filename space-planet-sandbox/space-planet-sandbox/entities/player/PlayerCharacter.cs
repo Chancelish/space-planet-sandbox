@@ -113,7 +113,7 @@ namespace space_planet_sandbox.entities.player
                 0f);
         }
 
-        public override Point GetWidth()
+        public override Point GetSize()
         {
             return hurtBox.Size();
         }

@@ -14,14 +14,13 @@ namespace space_planet_sandbox
         public static Dictionary<string, Texture2D> loadedTextures = new Dictionary<string, Texture2D>();
         public static SpriteFont defaultFont;
         public static PlayerGui gui { get; private set; }
+        public static float renderScale { get; private set; } = 1;
 
         public static Camera camera = new Camera();
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private RenderTarget2D renderTarget;  
-
-        private float renderScale = 1;
 
         private Texture2D gorilla;
 
@@ -58,6 +57,7 @@ namespace space_planet_sandbox
             LoadTexture("hotbarframe");
             LoadTexture("sand");
             LoadTexture("temppickaxeicon");
+            LoadTexture("forbidden_x");
 
             defaultFont = Content.Load<SpriteFont>("default");
 

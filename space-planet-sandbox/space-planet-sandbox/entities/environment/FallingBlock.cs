@@ -13,8 +13,8 @@ namespace space_planet_sandbox.entities.environment
         private Texture2D sprite;
         private string blockName;
         private float speed = 0f;
-        private float terminalVelocity = 400f;
-        private float gravity = 60f;
+        private float terminalVelocity = 420f;
+        private float gravity = 100f;
 
         public FallingBlock(float initX, float initY, string blockName)
         {
@@ -23,7 +23,7 @@ namespace space_planet_sandbox.entities.environment
             sprite = SandboxGame.loadedTextures[blockName];
             this.blockName = blockName;
             collisionGroup = "solid";
-            hitBox = new HitBox((int)x, (int)y, 16, 16);
+            hitBox = new HitBox((int)x, (int)y, 15, 16);
         }
 
         public override ICollisionMask GetCollisionMask()
@@ -31,7 +31,7 @@ namespace space_planet_sandbox.entities.environment
             return hitBox;
         }
 
-        public override Point GetWidth()
+        public override Point GetSize()
         {
             return hitBox.Size();
         }
@@ -47,15 +47,13 @@ namespace space_planet_sandbox.entities.environment
             y += speed * deltaT;
             hitBox.MoveTo((int)x, (int)y);
             var possibleCollisions = myWorld.GetPotentialCollisions((int)x, (int)y, hitBox.Size().X, hitBox.Size().Y);
-            if (possibleCollisions.ContainsKey("tiles"))
+            var solidCollisions = CollidableEntity.ExtractByCollisionGroup(possibleCollisions, this, "tiles", "solid");
+            foreach (var solid in solidCollisions)
             {
-                foreach (var chunk in possibleCollisions["tiles"])
+                if (Collide(solid, 0, 0))
                 {
-                    if (Collide(chunk, 0, 0))
-                    {
-                        flaggedForRemoval = true;
-                        myWorld.PlaceTile((int)x, (int)y, blockName);
-                    }
+                    flaggedForRemoval = true;
+                    myWorld.PlaceTile((int)x, (int)y, blockName);
                 }
             }
         }

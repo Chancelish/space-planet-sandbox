@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using space_planet_sandbox.collisiondetection;
 using space_planet_sandbox.world;
+using System.Collections.Generic;
 
 namespace space_planet_sandbox.entities
 {
@@ -32,11 +33,25 @@ namespace space_planet_sandbox.entities
             return new Vector2(x, y);
         }
 
-        public abstract Point GetWidth();
+        public abstract Point GetSize();
 
         public void SetWorld(World world)
         {
             myWorld = world;
+        }
+
+        public static HashSet<CollidableEntity> ExtractByCollisionGroup(Dictionary<string, HashSet<CollidableEntity>> collisions, CollidableEntity requester = null, params string[] groups)
+        {
+            HashSet<CollidableEntity> returnValue = new HashSet<CollidableEntity>();
+            foreach (string group in groups)
+            {
+                if (collisions.ContainsKey(group))
+                {
+                    returnValue.UnionWith(collisions[group]);
+                }
+            }
+            returnValue.RemoveWhere(entity => entity == requester);
+            return returnValue;
         }
     }
 }

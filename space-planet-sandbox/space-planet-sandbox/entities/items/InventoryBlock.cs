@@ -19,7 +19,10 @@ namespace space_planet_sandbox.entities.items
 
         public override void OnUse(Point cursorLocation, CollidableEntity callingEntity, World targetWorld)
         {
-            if (targetWorld.PlaceTile(cursorLocation.X, cursorLocation.Y, blockName)) quantity--;
+            if (!targetWorld.IsPlacementBlocked())
+            {
+                if (targetWorld.PlaceTile(cursorLocation.X, cursorLocation.Y, blockName)) quantity--;
+            }
         }
 
         public override void OnDrop(Point cursorLocation, CollidableEntity callingEntity, World targetWorld)
