@@ -58,6 +58,7 @@ namespace space_planet_sandbox
             LoadTexture("sand");
             LoadTexture("temppickaxeicon");
             LoadTexture("forbidden_x");
+            LoadTexture("menu_frame");
 
             defaultFont = Content.Load<SpriteFont>("default");
 
@@ -103,7 +104,7 @@ namespace space_planet_sandbox
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
             spriteBatch.Draw(renderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
-            gui.Render(spriteBatch, renderScale);
+            gui.Render(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
