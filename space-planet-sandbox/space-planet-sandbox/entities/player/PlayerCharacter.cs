@@ -90,6 +90,7 @@ namespace space_planet_sandbox.entities.player
 
             x += (float) deltaX;
             y += (float) deltaY;
+            if (y < 0) y = 0;
             hurtBox.MoveTo((int) x, (int) y);
         }
 

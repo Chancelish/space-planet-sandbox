@@ -97,7 +97,9 @@ namespace space_planet_sandbox.world
                         int yLocBelow = iy * tileSize + originY + 24;
                         if (myWorld.GetTileAt(xLocBelow, yLocBelow).tileName == "empty" || myWorld.GetTileAt(xLocBelow, yLocBelow).behaviorTag == TileBehavior.Liquid)
                         {
-                            myWorld.AddEntity(new FallingBlock(xLocBelow - 8, yLocBelow - 24, tileData[ix, iy].tileName));
+                            var fallingBlock = new FallingBlock(xLocBelow - 8, yLocBelow - 24, tileData[ix, iy].tileName);
+                            fallingBlock.isActive = true;
+                            myWorld.AddEntity(fallingBlock);
                             RemoveTile(xLocBelow, yLocBelow - 16);
                         }
                     }
