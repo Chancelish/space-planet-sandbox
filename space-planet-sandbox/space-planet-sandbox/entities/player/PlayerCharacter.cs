@@ -107,8 +107,8 @@ namespace space_planet_sandbox.entities.player
                 null,
                 Color.White,
                 0f,
-                new Vector2(0, 0),
-                Vector2.One,
+                Vector2.Zero,
+                1f,
                 SpriteEffects.None,
                 0f);
         }

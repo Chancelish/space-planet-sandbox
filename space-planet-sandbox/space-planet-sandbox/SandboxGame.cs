@@ -12,7 +12,8 @@ namespace space_planet_sandbox
     public class SandboxGame : Game
     {
         public static Dictionary<string, Texture2D> loadedTextures = new Dictionary<string, Texture2D>();
-        public static SpriteFont defaultFont;
+        public static SpriteFont defaultFont { get; private set; }
+        public static SpriteFont dialogFont { get; private set; }
         public static PlayerGui gui { get; private set; }
         public static float renderScale { get; private set; } = 1;
 
@@ -54,6 +55,7 @@ namespace space_planet_sandbox
             gorilla = Content.Load<Texture2D>("morshu");
             LoadTexture("unknown");
             LoadTexture("ground_tiles_and_plants");
+            LoadTexture("close_icon_v1");
             LoadTexture("hotbarframe");
             LoadTexture("sand");
             LoadTexture("temppickaxeicon");
@@ -61,9 +63,10 @@ namespace space_planet_sandbox
             LoadTexture("menu_frame");
 
             defaultFont = Content.Load<SpriteFont>("default");
+            dialogFont = Content.Load<SpriteFont>("dialog");
 
             renderTarget = new RenderTarget2D(GraphicsDevice, 1280, 720);
-            gui = new PlayerGui();
+            gui = new PlayerGui(new OptionsMenu(spriteBatch));
             testWorld = new World(7, 7, 32);
         }
 
@@ -74,9 +77,6 @@ namespace space_planet_sandbox
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
             InputUtils.PreUdate();
 
             testWorld.Update(gameTime);
@@ -172,6 +172,11 @@ namespace space_planet_sandbox
             return false;
         }
 
+        public static bool GetKeyPressed(string keyBinding)
+        {
+            return GetKeyState(keyBinding) && !GetLastFrameKeyState(keyBinding);
+        }
+
         public static void SetDefaultKeys()
         {
             keyBindings.Clear();
@@ -189,6 +194,13 @@ namespace space_planet_sandbox
             keyBindings.Add("hotbar8", Keys.D8);
             keyBindings.Add("hotbar9", Keys.D9);
             keyBindings.Add("hotbar0", Keys.D0);
+            // Reserved Keys, do not allow remapping
+            keyBindings.Add("escape", Keys.Escape);
+            keyBindings.Add("enter", Keys.Enter);
+            keyBindings.Add("upArrow", Keys.Up);
+            keyBindings.Add("downArrow", Keys.Down);
+            keyBindings.Add("leftArrow", Keys.Left);
+            keyBindings.Add("rightArrow", Keys.Right);
             boundKeyStates.Clear();
             boundKeyPrevious.Clear();
             foreach (string key in keyBindings.Keys)
