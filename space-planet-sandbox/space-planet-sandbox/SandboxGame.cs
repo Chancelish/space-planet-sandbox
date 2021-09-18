@@ -52,7 +52,7 @@ namespace space_planet_sandbox
             TileDataDictionary.LoadTiles();
 
             // TODO: use this.Content to load your game content here
-            gorilla = Content.Load<Texture2D>("morshu");
+            gorilla = Content.Load<Texture2D>("pink_mountain_bg");
             LoadTexture("unknown");
             LoadTexture("ground_tiles_and_plants");
             LoadTexture("close_icon_v1");

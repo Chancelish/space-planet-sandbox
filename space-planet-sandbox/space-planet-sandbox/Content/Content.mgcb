@@ -99,7 +99,7 @@
 /processorParam:TextureFormat=Color
 /build:menu_frame.png
 
-#begin morshu.png
+#begin pink_mountain_bg.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -109,7 +109,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:morshu.png
+/build:pink_mountain_bg.png
 
 #begin sand.png
 /importer:TextureImporter
