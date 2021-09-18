@@ -48,7 +48,7 @@ namespace space_planet_sandbox.world
             pixelWorldWidth = tileWorldWidth * tileSize;
             pixelWorldHeight = tileWorldHeight * tileSize;
 
-            player = new PlayerCharacter(50, 50);
+            player = new PlayerCharacter(640, 50);
             blockPreview = new BlockPreview(tileSize);
             blockPreview.SetWorld(this);
 

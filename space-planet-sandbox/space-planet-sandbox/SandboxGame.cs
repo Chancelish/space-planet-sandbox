@@ -102,8 +102,26 @@ namespace space_planet_sandbox
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, transformMatrix: camera.Transform);
-            spriteBatch.Draw(gorilla, new Vector2(camera.x / 4, camera.y / 4), Color.White);
-            spriteBatch.Draw(gorilla, new Vector2(camera.x / 4 + 1280, camera.y / 4), Color.White);
+            int x1 = camera.x / 4;
+            while (x1 > camera.x + 1280)
+            {
+                x1 -= 2560;
+            }
+            while (x1 <  camera.x - 1280)
+            {
+                x1 += 2560;
+            }
+            int x2 = camera.x / 4 + 1280;
+            while (x2 > camera.x + 1280)
+            {
+                x2 -= 2560;
+            }
+            while (x2 < camera.x - 1280)
+            {
+                x2 += 2560;
+            }
+            spriteBatch.Draw(gorilla, new Vector2(x1, camera.y / 4), Color.White);
+            spriteBatch.Draw(gorilla, new Vector2(x2, camera.y / 4), Color.White);
 
             testWorld.Render(spriteBatch);
 
