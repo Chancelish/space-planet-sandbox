@@ -47,7 +47,7 @@ namespace space_planet_sandbox.entities.environment
             y += speed * deltaT;
             hitBox.MoveTo((int)x, (int)y);
             var possibleCollisions = myWorld.GetPotentialCollisions((int)x, (int)y, hitBox.Size().X, hitBox.Size().Y);
-            var solidCollisions = CollidableEntity.ExtractByCollisionGroup(possibleCollisions, this, "tiles", "solid");
+            var solidCollisions = ExtractByCollisionGroup(possibleCollisions, this, "tiles", "solid");
             foreach (var solid in solidCollisions)
             {
                 if (Collide(solid, 0, 0))
