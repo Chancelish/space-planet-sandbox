@@ -94,7 +94,7 @@ namespace space_planet_sandbox
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, transformMatrix: camera.Transform);
-            spriteBatch.Draw(gorilla, Vector2.Zero, Color.White);
+            spriteBatch.Draw(gorilla, new Vector2(camera.x / 4, camera.y / 4), Color.White);
 
             testWorld.Render(spriteBatch);
 
