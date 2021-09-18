@@ -110,8 +110,8 @@ namespace space_planet_sandbox.gui
                 if (InputUtils.LeftMouseClicked)
                 {
                     var mouseLocation = Mouse.GetState().Position;
-                    var xi = 480 + 32 * i;
-                    if (mouseLocation.X > xi && mouseLocation.X < xi + 32 && mouseLocation.Y > 670 && mouseLocation.Y < 702)
+                    var xi = (480 + 32 * i) * SandboxGame.renderScale;
+                    if (mouseLocation.X > xi && mouseLocation.X < xi + 32 * SandboxGame.renderScale && mouseLocation.Y > 670 * SandboxGame.renderScale && mouseLocation.Y < 702 * SandboxGame.renderScale)
                     {
                         selectedItem = i;
                     }
