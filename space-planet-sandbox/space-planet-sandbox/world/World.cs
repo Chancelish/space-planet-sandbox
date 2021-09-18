@@ -109,8 +109,8 @@ namespace space_planet_sandbox.world
             PreUpdate();
 
             var mousePosition = Mouse.GetState().Position;
-            int realMouseX = mousePosition.X + SandboxGame.camera.x;
-            int realMouseY = mousePosition.Y + SandboxGame.camera.y;
+            int realMouseX = (int) (mousePosition.X / SandboxGame.renderScale) + SandboxGame.camera.x;
+            int realMouseY = (int) (mousePosition.Y / SandboxGame.renderScale) + SandboxGame.camera.y;
             
             if (SandboxGame.gui.GetHighlightedItem() != null)
             {

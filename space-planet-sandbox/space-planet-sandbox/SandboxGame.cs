@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using space_planet_sandbox.world;
 using space_planet_sandbox.rendering;
 using space_planet_sandbox.gui;
+using System;
 
 namespace space_planet_sandbox
 {
@@ -15,6 +16,8 @@ namespace space_planet_sandbox
         public static SpriteFont defaultFont { get; private set; }
         public static SpriteFont dialogFont { get; private set; }
         public static PlayerGui gui { get; private set; }
+
+        public static bool flagToQuit;
         public static float renderScale { get; private set; } = 1;
 
         public static Camera camera = new Camera();
@@ -32,6 +35,9 @@ namespace space_planet_sandbox
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += OnResize;
         }
 
         protected override void Initialize()
@@ -77,6 +83,8 @@ namespace space_planet_sandbox
 
         protected override void Update(GameTime gameTime)
         {
+            if (flagToQuit) Exit();
+            
             InputUtils.PreUdate();
 
             testWorld.Update(gameTime);
@@ -108,6 +116,11 @@ namespace space_planet_sandbox
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void OnResize(Object sender, EventArgs e)
+        {
+
         }
     }
 

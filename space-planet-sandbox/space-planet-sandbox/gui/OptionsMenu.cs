@@ -111,6 +111,21 @@ namespace space_planet_sandbox.gui
                 keyboardMode = true;
                 keyboardSelect++;
             }
+            if (InputUtils.GetKeyPressed("enter"))
+            {
+                switch (keyboardSelect)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        SandboxGame.flagToQuit = true;
+                        break;
+                }
+            }
             if (keyboardSelect < 0 && keyboardMode) keyboardSelect += options.Length;
             if (keyboardSelect >= options.Length && keyboardMode) keyboardSelect -= options.Length;
         }
