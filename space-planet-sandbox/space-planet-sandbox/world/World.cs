@@ -108,17 +108,15 @@ namespace space_planet_sandbox.world
         {
             PreUpdate();
 
-            var mousePosition = Mouse.GetState().Position;
-            int realMouseX = (int) (mousePosition.X / SandboxGame.renderScale) + SandboxGame.camera.x;
-            int realMouseY = (int) (mousePosition.Y / SandboxGame.renderScale) + SandboxGame.camera.y;
+            var mouseWorldPosition = InputUtils.GetMouseWorldPosition();
             
             if (SandboxGame.gui.GetHighlightedItem() != null)
             {
-                blockPreview.UpdatePosition(realMouseX, realMouseY);
+                blockPreview.UpdatePosition(mouseWorldPosition.X, mouseWorldPosition.Y);
                 blockPreview.Update(gameTime);
                 if (InputUtils.LeftMouse)
                 {
-                    SandboxGame.gui.GetHighlightedItem().OnUse(new Point(realMouseX, realMouseY), player, this);
+                    SandboxGame.gui.GetHighlightedItem().OnUse(new Point(mouseWorldPosition.X, mouseWorldPosition.Y), player, this);
                 }
             }
 

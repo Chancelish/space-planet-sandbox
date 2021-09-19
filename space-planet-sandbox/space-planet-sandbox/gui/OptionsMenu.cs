@@ -44,8 +44,9 @@ namespace space_planet_sandbox.gui
 
         public void Update()
         {
-            UpdateBasedOnMousePosition();
+            DetermineMouseOver();
             UpdateBasedOnKeypress();
+            CheckClick();
         }
 
         public void Render(SpriteBatch graphics)
@@ -71,15 +72,15 @@ namespace space_planet_sandbox.gui
             isOpen = true;
         }
 
-        private void UpdateBasedOnMousePosition()
+        private void DetermineMouseOver()
         {
-            var mousePosition = Mouse.GetState().Position;
-            var xLocLeft = backgroundX + 32 * SandboxGame.renderScale;
-            var xLocRight = backgroundX + 240 * SandboxGame.renderScale;
+            var mousePosition = InputUtils.GetMouseScreenPosition();
+            var xLocLeft = backgroundX + 32;
+            var xLocRight = backgroundX + 240;
             for (int i = 0; i < options.Length; i++)
             {
-                var yLocTop = backgroundY + (44 + 48 * i) * SandboxGame.renderScale;
-                var yLocBottom = backgroundY + (92 + 48 * i) * SandboxGame.renderScale;
+                var yLocTop = backgroundY + (44 + 48 * i);
+                var yLocBottom = backgroundY + (92 + 48 * i);
                 if (mousePosition.X > xLocLeft && mousePosition.X < xLocRight && mousePosition.Y > yLocTop && mousePosition.Y < yLocBottom)
                 {
                     mousedOverBox = i;
@@ -87,6 +88,25 @@ namespace space_planet_sandbox.gui
                 }
             }
             mousedOverBox = -1;
+        }
+
+        private void CheckClick()
+        {
+            if (InputUtils.LeftMouseClicked)
+            {
+                switch (mousedOverBox)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        SandboxGame.flagToQuit = true;
+                        break;
+                }
+            }
         }
 
         private void UpdateBasedOnKeypress()

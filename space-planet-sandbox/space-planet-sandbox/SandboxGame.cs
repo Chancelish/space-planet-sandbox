@@ -24,7 +24,8 @@ namespace space_planet_sandbox
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        private RenderTarget2D renderTarget;  
+        private RenderTarget2D actionLayer;
+        private RenderTarget2D guiLayer;
 
         private Texture2D gorilla;
 
@@ -71,7 +72,8 @@ namespace space_planet_sandbox
             defaultFont = Content.Load<SpriteFont>("default");
             dialogFont = Content.Load<SpriteFont>("dialog");
 
-            renderTarget = new RenderTarget2D(GraphicsDevice, 1280, 720);
+            actionLayer = new RenderTarget2D(GraphicsDevice, 1280, 720);
+            guiLayer = new RenderTarget2D(GraphicsDevice, 1280, 720);
             gui = new PlayerGui(new OptionsMenu(spriteBatch));
             testWorld = new World(7, 7, 32);
         }
@@ -98,28 +100,12 @@ namespace space_planet_sandbox
         protected override void Draw(GameTime gameTime)
         {
             renderScale = 1F / (720F / graphics.GraphicsDevice.Viewport.Height);
-            GraphicsDevice.SetRenderTarget(renderTarget);
+            GraphicsDevice.SetRenderTarget(actionLayer);
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, transformMatrix: camera.Transform);
-            int x1 = camera.x / 4;
-            while (x1 > camera.x + 1280)
-            {
-                x1 -= 2560;
-            }
-            while (x1 <  camera.x - 1280)
-            {
-                x1 += 2560;
-            }
-            int x2 = camera.x / 4 + 1280;
-            while (x2 > camera.x + 1280)
-            {
-                x2 -= 2560;
-            }
-            while (x2 < camera.x - 1280)
-            {
-                x2 += 2560;
-            }
+            int x1 = FindParallaxPosition(camera.x, 4);
+            int x2 = FindParallaxPosition(camera.x, 4, 1280);
             spriteBatch.Draw(gorilla, new Vector2(x1, camera.y / 4), Color.White);
             spriteBatch.Draw(gorilla, new Vector2(x2, camera.y / 4), Color.White);
 
@@ -130,11 +116,25 @@ namespace space_planet_sandbox
             GraphicsDevice.SetRenderTarget(null);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
-            spriteBatch.Draw(renderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(actionLayer, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
             gui.Render(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private int FindParallaxPosition(int cameraX, float ratio, int displacement = 0)
+        {
+            int x1 = (int) (camera.x / ratio) + displacement;
+            while (x1 > camera.x + 1280)
+            {
+                x1 -= 2560;
+            }
+            while (x1 < camera.x - 1280)
+            {
+                x1 += 2560;
+            }
+            return x1;
         }
 
         private void OnResize(Object sender, EventArgs e)
@@ -207,6 +207,22 @@ namespace space_planet_sandbox
         public static bool GetKeyPressed(string keyBinding)
         {
             return GetKeyState(keyBinding) && !GetLastFrameKeyState(keyBinding);
+        }
+
+        public static Point GetMouseWorldPosition()
+        {
+            var mousePosition = Mouse.GetState().Position;
+            int realMouseX = (int)(mousePosition.X / SandboxGame.renderScale) + SandboxGame.camera.x;
+            int realMouseY = (int)(mousePosition.Y / SandboxGame.renderScale) + SandboxGame.camera.y;
+            return new Point(realMouseX, realMouseY);
+        }
+
+        public static Point GetMouseScreenPosition()
+        {
+            var mousePosition = Mouse.GetState().Position;
+            int realMouseX = (int)(mousePosition.X / SandboxGame.renderScale);
+            int realMouseY = (int)(mousePosition.Y / SandboxGame.renderScale);
+            return new Point(realMouseX, realMouseY);
         }
 
         public static void SetDefaultKeys()
