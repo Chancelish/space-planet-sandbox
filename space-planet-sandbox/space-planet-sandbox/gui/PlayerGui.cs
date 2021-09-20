@@ -45,26 +45,26 @@ namespace space_planet_sandbox.gui
             for (int i = 0; i < 10; i++)
             {
                 var xi = 480 + 32 * i;
-                var location = new Vector2(xi * SandboxGame.renderScale, 670 * SandboxGame.renderScale);
+                var location = new Vector2(xi , 670 );
                 var color = i == selectedItem ? Color.LimeGreen : Color.White;
-                graphics.Draw(hotbarSprite, location, null, color, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
+                graphics.Draw(hotbarSprite, location, null, color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
                 String label = i == 9 ? "0" : (i + 1).ToString();
 
                 if (null != itemsOnHotbar[i])
                 {
-                    itemsOnHotbar[i].Render(graphics, xi, 670, SandboxGame.renderScale);
+                    itemsOnHotbar[i].Render(graphics, xi, 670);
                 }
 
-                var textLocation = new Vector2((500 + 32 * i) * SandboxGame.renderScale, 685 * SandboxGame.renderScale);
-                graphics.DrawString(SandboxGame.defaultFont, label, textLocation, Color.Black, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
-                var textLocation2 = new Vector2((502 + 32 * i) * SandboxGame.renderScale, 687 * SandboxGame.renderScale);
-                graphics.DrawString(SandboxGame.defaultFont, label, textLocation2, Color.Black, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
-                var textLocation3 = new Vector2((502 + 32 * i) * SandboxGame.renderScale, 685 * SandboxGame.renderScale);
-                graphics.DrawString(SandboxGame.defaultFont, label, textLocation3, Color.Black, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
-                var textLocation4 = new Vector2((500 + 32 * i) * SandboxGame.renderScale, 687 * SandboxGame.renderScale);
-                graphics.DrawString(SandboxGame.defaultFont, label, textLocation4, Color.Black, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
-                var textLocation5 = new Vector2((501 + 32 * i) * SandboxGame.renderScale, 686 * SandboxGame.renderScale);
-                graphics.DrawString(SandboxGame.defaultFont, label, textLocation5, Color.White, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
+                var textLocation = new Vector2((500 + 32 * i) , 685 );
+                graphics.DrawString(SandboxGame.defaultFont, label, textLocation, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                var textLocation2 = new Vector2((502 + 32 * i) , 687 );
+                graphics.DrawString(SandboxGame.defaultFont, label, textLocation2, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                var textLocation3 = new Vector2((502 + 32 * i) , 685 );
+                graphics.DrawString(SandboxGame.defaultFont, label, textLocation3, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                var textLocation4 = new Vector2((500 + 32 * i) , 687 );
+                graphics.DrawString(SandboxGame.defaultFont, label, textLocation4, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                var textLocation5 = new Vector2((501 + 32 * i) , 686 );
+                graphics.DrawString(SandboxGame.defaultFont, label, textLocation5, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
         }
 
@@ -109,9 +109,9 @@ namespace space_planet_sandbox.gui
 
                 if (InputUtils.LeftMouseClicked)
                 {
-                    var mouseLocation = Mouse.GetState().Position;
-                    var xi = (480 + 32 * i) * SandboxGame.renderScale;
-                    if (mouseLocation.X > xi && mouseLocation.X < xi + 32 * SandboxGame.renderScale && mouseLocation.Y > 670 * SandboxGame.renderScale && mouseLocation.Y < 702 * SandboxGame.renderScale)
+                    var mouseLocation = InputUtils.GetMouseScreenPosition();
+                    var xi = (480 + 32 * i);
+                    if (mouseLocation.X > xi && mouseLocation.X < xi + 32 && mouseLocation.Y > 670 && mouseLocation.Y < 702)
                     {
                         selectedItem = i;
                     }

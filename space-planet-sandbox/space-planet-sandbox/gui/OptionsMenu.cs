@@ -36,30 +36,31 @@ namespace space_planet_sandbox.gui
             textFrame = SandboxGame.loadedTextures["menu_frame"];
             closeIcon = SandboxGame.loadedTextures["close_icon_v1"];
 
-            backgroundX = 380 * SandboxGame.renderScale;
-            backgroundY = 170 * SandboxGame.renderScale;
+            backgroundX = 380;
+            backgroundY = 170;
 
             options = new string[] { video, sound, controls, quit };
         }
 
         public void Update()
         {
-            UpdateBasedOnMousePosition();
+            DetermineMouseOver();
             UpdateBasedOnKeypress();
+            CheckClick();
         }
 
         public void Render(SpriteBatch graphics)
         {
-            graphics.Draw(backGround, new Rectangle((int) backgroundX, (int) backgroundY, (int) (300 * SandboxGame.renderScale), (int) (300 * SandboxGame.renderScale)), Color.DarkBlue);
-            var closeIconPosition = new Vector2(backgroundX + 240 * SandboxGame.renderScale, backgroundY + 12 * SandboxGame.renderScale);
-            graphics.Draw(closeIcon, closeIconPosition, null, Color.White, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
+            graphics.Draw(backGround, new Rectangle((int) backgroundX, (int) backgroundY, 300, 300), Color.DarkBlue);
+            var closeIconPosition = new Vector2(backgroundX + 240, backgroundY + 12);
+            graphics.Draw(closeIcon, closeIconPosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             for (int i = 0; i < options.Length; i++)
             {
                 var color = i == keyboardSelect || i == mousedOverBox ? Color.LimeGreen : Color.White;
-                var boxPosition = new Vector2(backgroundX + 32 * SandboxGame.renderScale, backgroundY + (44 + 48 * i) * SandboxGame.renderScale);
-                graphics.Draw(textFrame, boxPosition, null, color, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
-                var textLocation = new Vector2(backgroundX + 60 * SandboxGame.renderScale, backgroundY + (52 + 48 * i) * SandboxGame.renderScale);
-                graphics.DrawString(SandboxGame.dialogFont, options[i], textLocation, Color.White, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
+                var boxPosition = new Vector2(backgroundX + 32, backgroundY + (44 + 48 * i));
+                graphics.Draw(textFrame, boxPosition, null, color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                var textLocation = new Vector2(backgroundX + 60, backgroundY + (52 + 48 * i));
+                graphics.DrawString(SandboxGame.dialogFont, options[i], textLocation, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
         }
 
@@ -71,15 +72,15 @@ namespace space_planet_sandbox.gui
             isOpen = true;
         }
 
-        private void UpdateBasedOnMousePosition()
+        private void DetermineMouseOver()
         {
-            var mousePosition = Mouse.GetState().Position;
-            var xLocLeft = backgroundX + 32 * SandboxGame.renderScale;
-            var xLocRight = backgroundX + 240 * SandboxGame.renderScale;
+            var mousePosition = InputUtils.GetMouseScreenPosition();
+            var xLocLeft = backgroundX + 32;
+            var xLocRight = backgroundX + 240;
             for (int i = 0; i < options.Length; i++)
             {
-                var yLocTop = backgroundY + (44 + 48 * i) * SandboxGame.renderScale;
-                var yLocBottom = backgroundY + (92 + 48 * i) * SandboxGame.renderScale;
+                var yLocTop = backgroundY + (44 + 48 * i);
+                var yLocBottom = backgroundY + (92 + 48 * i);
                 if (mousePosition.X > xLocLeft && mousePosition.X < xLocRight && mousePosition.Y > yLocTop && mousePosition.Y < yLocBottom)
                 {
                     mousedOverBox = i;
@@ -87,6 +88,25 @@ namespace space_planet_sandbox.gui
                 }
             }
             mousedOverBox = -1;
+        }
+
+        private void CheckClick()
+        {
+            if (InputUtils.LeftMouseClicked)
+            {
+                switch (mousedOverBox)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        SandboxGame.flagToQuit = true;
+                        break;
+                }
+            }
         }
 
         private void UpdateBasedOnKeypress()

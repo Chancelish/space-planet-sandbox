@@ -31,11 +31,9 @@ namespace space_planet_sandbox.entities.items
             targetWorld.MineTile(cursorLocation.X, cursorLocation.Y, miningPower);
         }
 
-        public override void Render(SpriteBatch graphics, float x, float y, float renderScale)
+        public override void Render(SpriteBatch graphics, float x, float y)
         {
-            var xActual = x * renderScale;
-            var yActual = y * renderScale;
-            graphics.Draw(icon, new Vector2(xActual, yActual), null, Color.White, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
+            graphics.Draw(icon, new Vector2(x, y), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
     }
 }

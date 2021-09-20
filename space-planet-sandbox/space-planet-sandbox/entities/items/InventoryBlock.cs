@@ -30,12 +30,12 @@ namespace space_planet_sandbox.entities.items
             
         }
 
-        public override void Render(SpriteBatch graphics, float x, float y, float renderScale)
+        public override void Render(SpriteBatch graphics, float x, float y)
         {
             var cornerOfTexture = new Rectangle(0, 0, 16, 16);
-            var xActual = (x + 8f) * renderScale;
-            var yActual = (y + 8f) * renderScale;
-            graphics.Draw(icon, new Vector2(xActual, yActual), cornerOfTexture, Color.White, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
+            var xActual = x + 8f;
+            var yActual = y + 8f;
+            graphics.Draw(icon, new Vector2(xActual, yActual), cornerOfTexture, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
     }
 }
