@@ -23,6 +23,6 @@ namespace space_planet_sandbox.entities.items
 
         public abstract void OnDrop(Point cursorLocation, CollidableEntity callingEntity, World targetWorld);
 
-        public abstract void Render(SpriteBatch graphics, float x, float y, float renderScale);
+        public abstract void Render(SpriteBatch graphics, float x, float y);
     }
 }

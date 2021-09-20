@@ -36,8 +36,8 @@ namespace space_planet_sandbox.gui
             textFrame = SandboxGame.loadedTextures["menu_frame"];
             closeIcon = SandboxGame.loadedTextures["close_icon_v1"];
 
-            backgroundX = 380 * SandboxGame.renderScale;
-            backgroundY = 170 * SandboxGame.renderScale;
+            backgroundX = 380;
+            backgroundY = 170;
 
             options = new string[] { video, sound, controls, quit };
         }
@@ -51,16 +51,16 @@ namespace space_planet_sandbox.gui
 
         public void Render(SpriteBatch graphics)
         {
-            graphics.Draw(backGround, new Rectangle((int) backgroundX, (int) backgroundY, (int) (300 * SandboxGame.renderScale), (int) (300 * SandboxGame.renderScale)), Color.DarkBlue);
-            var closeIconPosition = new Vector2(backgroundX + 240 * SandboxGame.renderScale, backgroundY + 12 * SandboxGame.renderScale);
-            graphics.Draw(closeIcon, closeIconPosition, null, Color.White, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
+            graphics.Draw(backGround, new Rectangle((int) backgroundX, (int) backgroundY, 300, 300), Color.DarkBlue);
+            var closeIconPosition = new Vector2(backgroundX + 240, backgroundY + 12);
+            graphics.Draw(closeIcon, closeIconPosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             for (int i = 0; i < options.Length; i++)
             {
                 var color = i == keyboardSelect || i == mousedOverBox ? Color.LimeGreen : Color.White;
-                var boxPosition = new Vector2(backgroundX + 32 * SandboxGame.renderScale, backgroundY + (44 + 48 * i) * SandboxGame.renderScale);
-                graphics.Draw(textFrame, boxPosition, null, color, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
-                var textLocation = new Vector2(backgroundX + 60 * SandboxGame.renderScale, backgroundY + (52 + 48 * i) * SandboxGame.renderScale);
-                graphics.DrawString(SandboxGame.dialogFont, options[i], textLocation, Color.White, 0f, Vector2.Zero, SandboxGame.renderScale, SpriteEffects.None, 0f);
+                var boxPosition = new Vector2(backgroundX + 32, backgroundY + (44 + 48 * i));
+                graphics.Draw(textFrame, boxPosition, null, color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                var textLocation = new Vector2(backgroundX + 60, backgroundY + (52 + 48 * i));
+                graphics.DrawString(SandboxGame.dialogFont, options[i], textLocation, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
         }
 

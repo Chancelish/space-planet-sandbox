@@ -113,11 +113,18 @@ namespace space_planet_sandbox
 
             spriteBatch.End();
 
+            GraphicsDevice.SetRenderTarget(guiLayer);
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap);
+            spriteBatch.Draw(actionLayer, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            gui.Render(spriteBatch);
+            spriteBatch.End();
+
             GraphicsDevice.SetRenderTarget(null);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
-            spriteBatch.Draw(actionLayer, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
-            gui.Render(spriteBatch);
+            
+            spriteBatch.Draw(guiLayer, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
             spriteBatch.End();
 
             base.Draw(gameTime);
