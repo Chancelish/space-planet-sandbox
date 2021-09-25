@@ -104,7 +104,7 @@ namespace space_planet_sandbox.gui
         {
             for (int i = 0; i < 10; i++)
             {
-                if (InputUtils.GetKeyState("hotbar" + i))
+                if (InputUtils.GetKeyState("Hotbar " + i))
                     selectedItem = i - 1;
 
                 if (InputUtils.LeftMouseClicked)

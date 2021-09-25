@@ -114,10 +114,6 @@ namespace space_planet_sandbox.world
             {
                 blockPreview.UpdatePosition(mouseWorldPosition.X, mouseWorldPosition.Y);
                 blockPreview.Update(gameTime);
-                if (InputUtils.LeftMouse)
-                {
-                    SandboxGame.gui.GetHighlightedItem().OnUse(new Point(mouseWorldPosition.X, mouseWorldPosition.Y), player, this);
-                }
             }
 
             for (int j = 0; j < 7; j++)
@@ -145,11 +141,19 @@ namespace space_planet_sandbox.world
 
         public void Render(SpriteBatch graphics)
         {
-            for (int i = 0; i < chunkWidth; i++)
+            for (int j = 0; j < 7; j++)
             {
-                for (int j = 0; j < chunkHeight; j++)
+                int jthIndex = yChunkMain - 3 + j;
+                if (jthIndex < 0 || jthIndex >= chunkHeight)
                 {
-                    chunks[i, j].Render(graphics);
+                    continue;
+                }
+                for (int i = 0; i < 7; i++)
+                {
+                    int ithIndex = xChunkMain - 3 + i;
+                    if (ithIndex < 0) ithIndex += chunkWidth;
+                    if (ithIndex >= chunkWidth) ithIndex -= chunkWidth;
+                    chunks[ithIndex, jthIndex].Render(graphics);
                 }
             }
 

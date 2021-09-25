@@ -99,6 +99,18 @@
 /processorParam:TextureFormat=Color
 /build:menu_frame.png
 
+#begin menu_frame_condensed.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:menu_frame_condensed.png
+
 #begin pink_mountain_bg.png
 /importer:TextureImporter
 /processor:TextureProcessor
