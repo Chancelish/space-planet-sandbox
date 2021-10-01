@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using space_planet_sandbox.collisiondetection;
 using space_planet_sandbox.world;
 using System.Collections.Generic;
+using space_planet_sandbox.entities.items;
 
 namespace space_planet_sandbox.entities.player
 {
@@ -16,6 +17,7 @@ namespace space_planet_sandbox.entities.player
         private Texture2D sprite;
 
         private Texture2D boxOutline;
+        private PlayerInventory inventory;
 
         public PlayerCharacter(int startX, int startY)
         {
@@ -28,6 +30,11 @@ namespace space_planet_sandbox.entities.player
         public override ICollisionMask GetCollisionMask()
         {
             return hurtBox;
+        }
+
+        public void SetInventory(PlayerInventory playerInventory)
+        {
+            inventory = playerInventory;
         }
 
         public override void Update(GameTime time)

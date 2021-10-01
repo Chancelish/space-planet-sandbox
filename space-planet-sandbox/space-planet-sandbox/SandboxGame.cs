@@ -67,6 +67,7 @@ namespace space_planet_sandbox
             LoadTexture("unknown");
             LoadTexture("ground_tiles_and_plants");
             LoadTexture("close_icon_v1");
+            LoadTexture("inventory_core");
             LoadTexture("hotbarframe");
             LoadTexture("sand");
             LoadTexture("temppickaxeicon");
