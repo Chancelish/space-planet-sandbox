@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,9 +15,10 @@ namespace space_planet_sandbox.gui
 
         private string[] options;
 
-        private Texture2D backGround;
-        private Texture2D textFrame;
-        private Texture2D closeIcon;
+        private readonly Texture2D backGround;
+        private readonly Texture2D textFrame;
+        private readonly Texture2D closeIcon;
+        private readonly ControlsMenu controlsSubMenu;
 
         private float backgroundX;
         private float backgroundY;
@@ -26,12 +26,13 @@ namespace space_planet_sandbox.gui
         public bool isOpen { get; private set; }
         private bool keyboardMode;
         private bool justOpened = true;
+        private bool mouseOverClose;
         private int mousedOverBox = -1;
         private int keyboardSelect = -1;
 
-        public OptionsMenu(SpriteBatch graphics)
+        public OptionsMenu(Texture2D texture, ControlsMenu controlsMenu)
         {
-            backGround = new Texture2D(graphics.GraphicsDevice, 1, 1);
+            backGround = texture;
             backGround.SetData(new[] { Color.White });
             textFrame = SandboxGame.loadedTextures["menu_frame"];
             closeIcon = SandboxGame.loadedTextures["close_icon_v1"];
@@ -40,10 +41,17 @@ namespace space_planet_sandbox.gui
             backgroundY = 170;
 
             options = new string[] { video, sound, controls, quit };
+
+            controlsSubMenu = controlsMenu;
         }
 
         public void Update()
         {
+            if (controlsSubMenu.isOpen)
+            {
+                controlsSubMenu.Update();
+                return;
+            }
             DetermineMouseOver();
             UpdateBasedOnKeypress();
             CheckClick();
@@ -51,15 +59,20 @@ namespace space_planet_sandbox.gui
 
         public void Render(SpriteBatch graphics)
         {
+            if (controlsSubMenu.isOpen)
+            {
+                controlsSubMenu.Render(graphics);
+                return;
+            }
             graphics.Draw(backGround, new Rectangle((int) backgroundX, (int) backgroundY, 300, 300), Color.DarkBlue);
             var closeIconPosition = new Vector2(backgroundX + 240, backgroundY + 12);
-            graphics.Draw(closeIcon, closeIconPosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            graphics.Draw(closeIcon, closeIconPosition, null, mouseOverClose ? Color.LimeGreen : Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             for (int i = 0; i < options.Length; i++)
             {
                 var color = i == keyboardSelect || i == mousedOverBox ? Color.LimeGreen : Color.White;
                 var boxPosition = new Vector2(backgroundX + 32, backgroundY + (44 + 48 * i));
                 graphics.Draw(textFrame, boxPosition, null, color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                var textLocation = new Vector2(backgroundX + 60, backgroundY + (52 + 48 * i));
+                var textLocation = new Vector2(backgroundX + 60, backgroundY + (56 + 48 * i));
                 graphics.DrawString(SandboxGame.dialogFont, options[i], textLocation, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
         }
@@ -87,6 +100,7 @@ namespace space_planet_sandbox.gui
                     return;
                 }
             }
+            mouseOverClose = mousePosition.X > backgroundX + 240 && mousePosition.Y > backgroundY + 12 && mousePosition.X < backgroundX + 272 && mousePosition.Y < backgroundY + 44;
             mousedOverBox = -1;
         }
 
@@ -101,10 +115,18 @@ namespace space_planet_sandbox.gui
                     case 1:
                         break;
                     case 2:
+                        controlsSubMenu.isOpen = true;
                         break;
                     case 3:
                         SandboxGame.flagToQuit = true;
                         break;
+                }
+                var mousePosition = InputUtils.GetMouseScreenPosition();
+                if (mouseOverClose)
+                {
+                    keyboardMode = false;
+                    isOpen = false;
+                    return;
                 }
             }
         }
@@ -121,12 +143,12 @@ namespace space_planet_sandbox.gui
             {
                 justOpened = false;
             }
-            if (InputUtils.GetKeyPressed("directionUp") || InputUtils.GetKeyPressed("upArrow"))
+            if (InputUtils.GetKeyPressed("Up") || InputUtils.GetKeyPressed("upArrow"))
             {
                 keyboardMode = true;
                 keyboardSelect--;
             }
-            else if (InputUtils.GetKeyPressed("directionDown") || InputUtils.GetKeyPressed("downArrow"))
+            else if (InputUtils.GetKeyPressed("Down") || InputUtils.GetKeyPressed("downArrow"))
             {
                 keyboardMode = true;
                 keyboardSelect++;
@@ -140,6 +162,7 @@ namespace space_planet_sandbox.gui
                     case 1:
                         break;
                     case 2:
+                        controlsSubMenu.isOpen = true;
                         break;
                     case 3:
                         SandboxGame.flagToQuit = true;

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using space_planet_sandbox.collisiondetection;
 using space_planet_sandbox.world;
 using System.Collections.Generic;
+using space_planet_sandbox.entities.items;
 
 namespace space_planet_sandbox.entities.player
 {
@@ -11,9 +12,12 @@ namespace space_planet_sandbox.entities.player
     {
         private HitBox hurtBox;
         private float speed = 200.0f;
+        private double xVelocity = 0;
+        private double yVelocity = 0;
         private Texture2D sprite;
 
         private Texture2D boxOutline;
+        private PlayerInventory inventory;
 
         public PlayerCharacter(int startX, int startY)
         {
@@ -28,29 +32,27 @@ namespace space_planet_sandbox.entities.player
             return hurtBox;
         }
 
+        public void SetInventory(PlayerInventory playerInventory)
+        {
+            inventory = playerInventory;
+        }
+
         public override void Update(GameTime time)
         {
             SandboxGame.camera.Follow(this, 1280, 720);
 
             var possibleCollisions = myWorld.GetPotentialCollisions((int) x, (int) y, hurtBox.Size().X, hurtBox.Size().Y);
-            
-            double deltaY = 0;
-            double deltaX = 0;
 
-            if (InputUtils.GetKeyState("directionUp"))
-                deltaY -= speed * time.ElapsedGameTime.TotalSeconds;
+            xVelocity = 0;
+            yVelocity = 0;
 
-            if (InputUtils.GetKeyState("directionDown"))
-                deltaY += speed * time.ElapsedGameTime.TotalSeconds;
+            if (SandboxGame.gui.guiState != gui.GuiState.OptionsMenu)
+            {
+                CheckPlayerInput(time);
+            }
 
-            if (InputUtils.GetKeyState("directionLeft"))
-                deltaX -= speed * time.ElapsedGameTime.TotalSeconds;
-
-            if (InputUtils.GetKeyState("directionRight"))
-                deltaX += speed * time.ElapsedGameTime.TotalSeconds;
-
-            int xCheck = (int) (deltaX + Math.Sign(deltaX));
-            int yCheck = (int) (deltaY + Math.Sign(deltaY));
+            int xCheck = (int) (xVelocity + Math.Sign(xVelocity));
+            int yCheck = (int) (yVelocity + Math.Sign(yVelocity));
 
             if (possibleCollisions.ContainsKey("tiles"))
             {
@@ -61,7 +63,7 @@ namespace space_planet_sandbox.entities.player
                         while (xCheck != 0)
                         {
                             xCheck = xCheck > 0 ? xCheck - 1 : xCheck + 1;
-                            deltaX = xCheck;
+                            xVelocity = xCheck;
                             if (!Collide(chunk, xCheck, 0))
                             {
                                 break;
@@ -77,7 +79,7 @@ namespace space_planet_sandbox.entities.player
                         while (yCheck != 0)
                         {
                             yCheck = yCheck > 0 ? yCheck - 1 : yCheck + 1;
-                            deltaY = yCheck;
+                            yVelocity = yCheck;
                             if (!Collide(chunk, 0, yCheck))
                             {
                                 break;
@@ -88,8 +90,8 @@ namespace space_planet_sandbox.entities.player
                 }
             }
 
-            x += (float) deltaX;
-            y += (float) deltaY;
+            x += (float) xVelocity;
+            y += (float) yVelocity;
             if (y < 0) y = 0;
             hurtBox.MoveTo((int) x, (int) y);
         }
@@ -117,6 +119,28 @@ namespace space_planet_sandbox.entities.player
         public override Point GetSize()
         {
             return hurtBox.Size();
+        }
+
+        private void CheckPlayerInput(GameTime time)
+        {
+            var mouseWorldPosition = InputUtils.GetMouseWorldPosition();
+
+            if (InputUtils.LeftMouse && SandboxGame.gui.GetHighlightedItem() != null)
+            {
+                SandboxGame.gui.GetHighlightedItem().OnUse(new Point(mouseWorldPosition.X, mouseWorldPosition.Y), this, myWorld);
+            }
+
+            if (InputUtils.GetKeyState("Up"))
+                yVelocity -= speed * time.ElapsedGameTime.TotalSeconds;
+
+            if (InputUtils.GetKeyState("Down"))
+                yVelocity += speed * time.ElapsedGameTime.TotalSeconds;
+
+            if (InputUtils.GetKeyState("Left"))
+                xVelocity -= speed * time.ElapsedGameTime.TotalSeconds;
+
+            if (InputUtils.GetKeyState("Right"))
+                xVelocity += speed * time.ElapsedGameTime.TotalSeconds;
         }
     }
 }

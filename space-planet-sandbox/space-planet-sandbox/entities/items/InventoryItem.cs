@@ -7,6 +7,7 @@ namespace space_planet_sandbox.entities.items
     public abstract class InventoryItem
     {
         public int maxStack { get; protected set; }
+        public InventoryTab tab { get; protected set; }
         private int _quantity;
         public int quantity 
         {

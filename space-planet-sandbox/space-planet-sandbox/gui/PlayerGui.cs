@@ -25,6 +25,8 @@ namespace space_planet_sandbox.gui
         private OptionsMenu optionsMenu;
         private InventoryItem[] itemsOnHotbar = new InventoryItem[10];
 
+        public bool clicked { get; private set; }
+
         public PlayerGui(OptionsMenu options)
         {
             hotbarSprite = SandboxGame.loadedTextures["hotbarframe"];
@@ -70,6 +72,7 @@ namespace space_planet_sandbox.gui
 
         public void Update()
         {
+            clicked = false;
             switch (guiState)
             {
                 case GuiState.OptionsMenu:
@@ -104,7 +107,7 @@ namespace space_planet_sandbox.gui
         {
             for (int i = 0; i < 10; i++)
             {
-                if (InputUtils.GetKeyState("hotbar" + i))
+                if (InputUtils.GetKeyState("Hotbar " + i))
                     selectedItem = i - 1;
 
                 if (InputUtils.LeftMouseClicked)
@@ -114,6 +117,7 @@ namespace space_planet_sandbox.gui
                     if (mouseLocation.X > xi && mouseLocation.X < xi + 32 && mouseLocation.Y > 670 && mouseLocation.Y < 702)
                     {
                         selectedItem = i;
+                        clicked = true;
                     }
                 }
             }
