@@ -26,15 +26,12 @@ namespace space_planet_sandbox.entities.player
             x = startX;
             y = startY;
             collisionGroup = "player";
+            inventory = new PlayerInventory();
+            SandboxGame.gui.SetInventory(inventory);
         }
         public override ICollisionMask GetCollisionMask()
         {
             return hurtBox;
-        }
-
-        public void SetInventory(PlayerInventory playerInventory)
-        {
-            inventory = playerInventory;
         }
 
         public override void Update(GameTime time)
@@ -125,10 +122,12 @@ namespace space_planet_sandbox.entities.player
         {
             var mouseWorldPosition = InputUtils.GetMouseWorldPosition();
 
-            if (InputUtils.LeftMouse && SandboxGame.gui.GetHighlightedItem() != null)
+            if (InputUtils.LeftMouse && inventory.GetHighlightedItem() != null)
             {
                 SandboxGame.gui.GetHighlightedItem().OnUse(new Point(mouseWorldPosition.X, mouseWorldPosition.Y), this, myWorld);
             }
+
+            if (InputUtils.GetKeyState("Inventory") && !InputUtils.GetLastFrameKeyState("Inventory")) SandboxGame.gui.OpenIventory(inventory);
 
             if (InputUtils.GetKeyState("Up"))
                 yVelocity -= speed * time.ElapsedGameTime.TotalSeconds;

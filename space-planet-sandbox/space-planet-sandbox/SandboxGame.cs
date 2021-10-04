@@ -54,6 +54,7 @@ namespace space_planet_sandbox
             var menuBackDrop = new Texture2D(graphics.GraphicsDevice, 1, 1);
 
             gui = new PlayerGui(new OptionsMenu(menuBackDrop, new ControlsMenu(Window, menuBackDrop)));
+            testWorld = new World(70, 20, 32);
         }
 
         protected override void LoadContent()
@@ -80,7 +81,6 @@ namespace space_planet_sandbox
 
             actionLayer = new RenderTarget2D(GraphicsDevice, 1280, 720);
             guiLayer = new RenderTarget2D(GraphicsDevice, 1280, 720);
-            testWorld = new World(70, 20, 32);
         }
 
         private void LoadTexture(string textureName)
