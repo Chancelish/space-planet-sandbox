@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,9 +19,15 @@ namespace space_planet_sandbox.entities.items
     public class PlayerInventory
     {
         public readonly int slotCount = 60;
-        private InventoryTab selectedTab = InventoryTab.Equipment;
+        public InventoryTab selectedTab = InventoryTab.Equipment;
 
-        Dictionary<InventoryTab, InventoryItem[]> inventorySlots = new Dictionary<InventoryTab, InventoryItem[]>();
+        private Dictionary<InventoryTab, InventoryItem[]> inventorySlots = new Dictionary<InventoryTab, InventoryItem[]>();
+
+        private InventoryItem[] itemsOnHotbar = new InventoryItem[10];
+        private int selectedItem;
+        private Texture2D hotbarSprite;
+
+        public bool clicked { get; private set; }
 
         public PlayerInventory()
         {
@@ -28,6 +36,12 @@ namespace space_planet_sandbox.entities.items
             inventorySlots.Add(InventoryTab.Blocks, new InventoryItem[60]);
             inventorySlots.Add(InventoryTab.Consumables, new InventoryItem[60]);
             inventorySlots.Add(InventoryTab.Materials, new InventoryItem[60]);
+            // TODO: Load from file.
+            hotbarSprite = SandboxGame.loadedTextures["hotbarframe"];
+            selectedItem = 0;
+            itemsOnHotbar[1] = new InventoryPickaxe();
+            itemsOnHotbar[2] = new InventoryBlock("ground_tiles_and_plants", 1000, 64);
+            itemsOnHotbar[3] = new InventoryBlock("sand", 1000, 32);
         }
 
         public bool IsFull(InventoryTab tab)
@@ -37,6 +51,11 @@ namespace space_planet_sandbox.entities.items
                 if (inventorySlots[tab][i] == null) return false;
             }
             return true;
+        }
+
+        public InventoryItem GetItemAt(int index)
+        {
+            return inventorySlots[selectedTab][index];
         }
 
         public void Remove(InventoryTab tab, int index)
@@ -68,11 +87,88 @@ namespace space_planet_sandbox.entities.items
             return -1;
         }
 
-        public void Render(SpriteBatch graphics, int x, int y)
+        public void RenderInventory(SpriteBatch graphics, int x, int y)
         {
-            foreach (InventoryItem item in inventorySlots[selectedTab])
+            for (int i = 0; i < inventorySlots[selectedTab].Length; i++)
             {
-                if (item != null) item.Render(graphics, 0, 0);
+                if (inventorySlots[selectedTab][i] != null) inventorySlots[selectedTab][i].Render(graphics, x + 32 * (i % 10), y + 32 * (i / 10));
+            }
+        }
+
+        public void RemoveFromHotbar(int index)
+        {
+            itemsOnHotbar[index] = null;
+        }
+
+        public InventoryItem GetHighlightedItem()
+        {
+            return itemsOnHotbar[selectedItem];
+        }
+
+        public void RenderHotbar(SpriteBatch graphics)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                var xi = 480 + 32 * i;
+                var location = new Vector2(xi, 660);
+                var color = i == selectedItem ? Color.LimeGreen : Color.White;
+                graphics.Draw(hotbarSprite, location, null, color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                String label = i == 9 ? "0" : (i + 1).ToString();
+
+                if (null != itemsOnHotbar[i])
+                {
+                    itemsOnHotbar[i].Render(graphics, xi, 660);
+                }
+
+                var textLocation = new Vector2((501 + 32 * i), 676);
+                graphics.DrawString(SandboxGame.defaultFont, label, textLocation, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                var textLocation2 = new Vector2((503 + 32 * i), 678);
+                graphics.DrawString(SandboxGame.defaultFont, label, textLocation2, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                var textLocation3 = new Vector2((503 + 32 * i), 675);
+                graphics.DrawString(SandboxGame.defaultFont, label, textLocation3, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                var textLocation4 = new Vector2((501 + 32 * i), 678);
+                graphics.DrawString(SandboxGame.defaultFont, label, textLocation4, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                var textLocation5 = new Vector2((502 + 32 * i), 677);
+                graphics.DrawString(SandboxGame.defaultFont, label, textLocation5, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            }
+        }
+
+        public void UpdateHotbar()
+        {
+            clicked = false;
+            for (int i = 0; i < 10; i++)
+            {
+                if (InputUtils.GetKeyState("Hotbar " + i))
+                    selectedItem = i - 1;
+
+                if (InputUtils.LeftMouseClicked)
+                {
+                    var mouseLocation = InputUtils.GetMouseScreenPosition();
+                    var xi = (480 + 32 * i);
+                    if (mouseLocation.X > xi && mouseLocation.X < xi + 32 && mouseLocation.Y > 670 && mouseLocation.Y < 702)
+                    {
+                        selectedItem = i;
+                        clicked = true;
+                    }
+                }
+            }
+
+            if (InputUtils.previousScrollWheelValue > Mouse.GetState().ScrollWheelValue)
+            {
+                selectedItem++;
+            }
+            else if (InputUtils.previousScrollWheelValue < Mouse.GetState().ScrollWheelValue)
+            {
+                selectedItem--;
+            }
+
+            if (selectedItem < 0)
+            {
+                selectedItem += 10;
+            }
+            if (selectedItem >= 10)
+            {
+                selectedItem -= 10;
             }
         }
     }
