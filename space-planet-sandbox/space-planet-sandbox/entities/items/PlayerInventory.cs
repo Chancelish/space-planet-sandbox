@@ -120,16 +120,7 @@ namespace space_planet_sandbox.entities.items
                     itemsOnHotbar[i].Render(graphics, xi, 660);
                 }
 
-                var textLocation = new Vector2((501 + 32 * i), 676);
-                graphics.DrawString(SandboxGame.defaultFont, label, textLocation, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                var textLocation2 = new Vector2((503 + 32 * i), 678);
-                graphics.DrawString(SandboxGame.defaultFont, label, textLocation2, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                var textLocation3 = new Vector2((503 + 32 * i), 675);
-                graphics.DrawString(SandboxGame.defaultFont, label, textLocation3, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                var textLocation4 = new Vector2((501 + 32 * i), 678);
-                graphics.DrawString(SandboxGame.defaultFont, label, textLocation4, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                var textLocation5 = new Vector2((502 + 32 * i), 677);
-                graphics.DrawString(SandboxGame.defaultFont, label, textLocation5, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                TextUtils.RenderOutlinedText(graphics, SandboxGame.defaultFont, label, 502 + 32 * i, 678);
             }
         }
 
