@@ -15,6 +15,7 @@ namespace space_planet_sandbox.entities.items
             quantity = initialValue;
             this.blockName = blockName;
             icon = SandboxGame.loadedTextures[blockName];
+            usable = true;
         }
 
         public override void OnUse(Point cursorLocation, CollidableEntity callingEntity, World targetWorld)
@@ -36,6 +37,7 @@ namespace space_planet_sandbox.entities.items
             var xActual = x + 8f;
             var yActual = y + 8f;
             graphics.Draw(icon, new Vector2(xActual, yActual), cornerOfTexture, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            TextUtils.RenderOutlinedText(graphics, SandboxGame.smolFont, quantity.ToString(), (int) x + 1, (int) y + 1);
         }
     }
 }

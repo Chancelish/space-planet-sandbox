@@ -147,6 +147,13 @@
 /processorParam:TextureFormat=Color
 /build:sand.png
 
+#begin smolprint.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:smolprint.spritefont
+
 #begin temppickaxeicon.png
 /importer:TextureImporter
 /processor:TextureProcessor

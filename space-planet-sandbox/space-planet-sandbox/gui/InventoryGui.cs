@@ -51,10 +51,16 @@ namespace space_planet_sandbox.gui
 
         public void Update()
         {
+            clicked = false;
             inventory.UpdateHotbar();
             if (isOpen)
             {
                 UpdateInternal();
+            }
+            if (InputUtils.LeftMouse)
+            {
+                var mousePosition = InputUtils.GetMouseScreenPosition();
+                clicked = MouseInItemGrid(mousePosition) || MouseOverHotbar(mousePosition);
             }
         }
 
@@ -85,29 +91,40 @@ namespace space_planet_sandbox.gui
                 if (MouseInItemGrid(mousePosition))
                 {
                     int _x = (int) (mousePosition.X - position.X) / 32;
-                    int _y = (int) (mousePosition.Y - position.Y) / 32;
+                    int _y = (int) (mousePosition.Y - (position.Y + 16)) / 32;
                     grabbedIndex = _x + 10 * _y;
                     grabbedItem = inventory.GetItemAt(grabbedIndex);
-                    clicked = true;
                 }
             }
-            if (InputUtils.LeftMouseReleased)
+            if (InputUtils.LeftMouseReleased && grabbedIndex != -1)
             {
                 if (MouseInItemGrid(mousePosition))
                 {
                     int _x = (int)(mousePosition.X - position.X) / 32;
-                    int _y = (int)(mousePosition.Y - position.Y) / 32;
+                    int _y = (int)(mousePosition.Y - (position.Y + 16)) / 32;
                     var releasedIndex = _x + 10 * _y;
                     if (releasedIndex != grabbedIndex) inventory.Swap(inventory.selectedTab, grabbedIndex, releasedIndex);
                 }
+                for (int i = 0; i < 10; i++)
+                {
+                    var xi = (480 + 32 * i);
+                    if (mousePosition.X > xi && mousePosition.X < xi + 32 && mousePosition.Y > 660 && mousePosition.Y < 692) inventory.PlaceOnHotbar(i, grabbedItem);
+                }
                 grabbedItem = null;
+                grabbedIndex = -1;
             }
             if (InputUtils.GetKeyPressed("escape")) Close();
+            clicked = MouseInItemGrid(mousePosition);
         }
 
         private bool MouseInItemGrid(Point mousePosition)
         {
             return mousePosition.X > position.X && mousePosition.Y > position.Y + 16 && mousePosition.X < position.X + 320 && mousePosition.Y < position.Y + 208;
+        }
+
+        private bool MouseOverHotbar(Point mousePosition)
+        {
+            return mousePosition.X > 480 && mousePosition.Y > 660 && mousePosition.X < 800 && mousePosition.Y < 692;
         }
     }
 }

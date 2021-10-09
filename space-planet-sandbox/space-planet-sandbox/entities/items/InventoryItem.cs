@@ -8,6 +8,8 @@ namespace space_planet_sandbox.entities.items
     {
         public int maxStack { get; protected set; }
         public InventoryTab tab { get; protected set; }
+        public string name { get; protected set; }
+        public bool usable { get; protected set; }
         private int _quantity;
         public int quantity 
         {
