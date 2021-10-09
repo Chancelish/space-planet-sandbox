@@ -3,12 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using space_planet_sandbox.collisiondetection;
 using space_planet_sandbox.world;
-using System.Collections.Generic;
 using space_planet_sandbox.entities.items;
 
 namespace space_planet_sandbox.entities.player
 {
-    class PlayerCharacter : CollidableEntity
+    public class PlayerCharacter : CollidableEntity
     {
         private HitBox hurtBox;
         private float speed = 200.0f;
@@ -122,7 +121,7 @@ namespace space_planet_sandbox.entities.player
         {
             var mouseWorldPosition = InputUtils.GetMouseWorldPosition();
 
-            if (InputUtils.LeftMouse && inventory.GetHighlightedItem() != null)
+            if (InputUtils.LeftMouse && inventory.GetHighlightedItem() != null && !SandboxGame.gui.clicked)
             {
                 SandboxGame.gui.GetHighlightedItem().OnUse(new Point(mouseWorldPosition.X, mouseWorldPosition.Y), this, myWorld);
             }

@@ -50,6 +50,7 @@ namespace space_planet_sandbox.gui
                     break;
                 case GuiState.Basic:
                     inventoryGui.Update();
+                    clicked = inventoryGui.clicked;
                     if (InputUtils.GetKeyPressed("escape"))
                     {
                         guiState = GuiState.OptionsMenu;
@@ -58,6 +59,7 @@ namespace space_planet_sandbox.gui
                     break;
                 case GuiState.Inventory:
                     inventoryGui.Update();
+                    clicked = inventoryGui.clicked;
                     if (!inventoryGui.isOpen) guiState = GuiState.Basic;
                     break;
             }

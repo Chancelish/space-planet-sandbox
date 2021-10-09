@@ -19,6 +19,7 @@ namespace space_planet_sandbox.entities.items
             miningPower = 2.5f;
             attackPower = 2f;
             icon = SandboxGame.loadedTextures["temppickaxeicon"];
+            usable = true;
         }
 
         public override void OnDrop(Point cursorLocation, CollidableEntity callingEntity, World targetWorld)

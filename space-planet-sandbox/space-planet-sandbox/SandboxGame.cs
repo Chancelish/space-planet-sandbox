@@ -15,6 +15,7 @@ namespace space_planet_sandbox
         public static Dictionary<string, Texture2D> loadedTextures = new Dictionary<string, Texture2D>();
         public static SpriteFont defaultFont { get; private set; }
         public static SpriteFont dialogFont { get; private set; }
+        public static SpriteFont smolFont { get; private set; }
         public static PlayerGui gui { get; private set; }
 
         public static bool flagToQuit;
@@ -78,6 +79,7 @@ namespace space_planet_sandbox
 
             defaultFont = Content.Load<SpriteFont>("default");
             dialogFont = Content.Load<SpriteFont>("dialog");
+            smolFont = Content.Load<SpriteFont>("smolprint");
 
             actionLayer = new RenderTarget2D(GraphicsDevice, 1280, 720);
             guiLayer = new RenderTarget2D(GraphicsDevice, 1280, 720);
