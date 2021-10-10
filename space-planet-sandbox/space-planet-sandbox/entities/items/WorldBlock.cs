@@ -9,19 +9,22 @@ namespace space_planet_sandbox.entities.items
 {
     public class WorldBlock : WorldItem
     {
-        private float gravity = 100f;
+        private float gravity = 250f;
+        private float terminalVelocity = 500f;
+        private float friction = 0.03f;
         private float xVelocity;
         private float yVelocity;
+        private bool onGround;
         private Texture2D icon;
 
         public WorldBlock(float _x, float _y, int quantity, string block)
         {
             name = block;
             associatedItem = new InventoryBlock(block, 1000, quantity);
-            yVelocity = -30f;
+            yVelocity = -40f;
             icon = SandboxGame.loadedTextures[block];
             var rand = new Random();
-            xVelocity = (float) (rand.NextDouble() - 0.5) * 60f;
+            xVelocity = (float) (rand.NextDouble() - 0.5) * 100f;
             x = _x;
             y = _y;
             hitBox = new collisiondetection.HitBox((int) _x, (int) _y, 12, 12);
@@ -32,9 +35,9 @@ namespace space_planet_sandbox.entities.items
         {
             name = block;
             associatedItem = new InventoryBlock(block, 1000, quantity);
-            yVelocity = -30f;
+            yVelocity = -60f;
             icon = SandboxGame.loadedTextures[block];
-            xVelocity = mouseX > _x ? 30f : -30f;
+            xVelocity = mouseX > _x ? 100f : -100f;
             x = _x;
             y = _y;
             hitBox = new collisiondetection.HitBox((int) _x, (int) _y, 12, 12);
@@ -117,6 +120,13 @@ namespace space_planet_sandbox.entities.items
         {
             var deltaT = (float) time.ElapsedGameTime.TotalSeconds;
             yVelocity += gravity * deltaT;
+            if (yVelocity > terminalVelocity) yVelocity = terminalVelocity;
+
+            xVelocity -= xVelocity * deltaT * (onGround ? friction * 90 : friction);
+            if (Math.Abs(xVelocity) < 5f)
+            {
+                xVelocity = 0;
+            }
 
             var deltaX = xVelocity * deltaT;
             var deltaY = yVelocity * deltaT;
@@ -156,13 +166,15 @@ namespace space_planet_sandbox.entities.items
                             break;
                         }
                     }
+                    onGround = true;
                     yVelocity = deltaY / deltaT;
                     break;
                 }
+                else onGround = false;
             }
 
-            x += xVelocity;
-            y += yVelocity;
+            x += deltaX;
+            y += deltaY;
             if (y < 0) y = 0;
             hitBox.MoveTo((int)x, (int)y);
         }
