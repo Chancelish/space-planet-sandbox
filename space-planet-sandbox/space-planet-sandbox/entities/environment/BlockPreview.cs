@@ -43,7 +43,7 @@ namespace space_planet_sandbox.entities.environment
                 var cornerOfTexture = new Rectangle(0, 0, 16, 16);
                 var position = new Vector2(x, y);
                 Color transparency = new Color(1.0f, 1.0f, 1.0f, 0.3f);
-                graphics.Draw(SandboxGame.loadedTextures[block.blockName], position, cornerOfTexture, transparency, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
+                graphics.Draw(SandboxGame.loadedTextures[block.name], position, cornerOfTexture, transparency, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
                 if (placementBlocked)
                 {
                     graphics.Draw(sprite, position, transparency);

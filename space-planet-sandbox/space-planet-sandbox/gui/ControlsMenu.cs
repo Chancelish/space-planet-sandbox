@@ -87,8 +87,8 @@ namespace space_planet_sandbox.gui
                 graphics.Draw(backGround, new Rectangle(160, 96, 1008, 288), Color.Black);
                 string instructions = "Press a key to bind it to the '" + selectedKeyBinding + "' action.";
                 string noEscape = "Or press 'Escape' to cancel the binding."; 
-                graphics.DrawString(SandboxGame.dialogFont, instructions, new Vector2(192, 128), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                graphics.DrawString(SandboxGame.dialogFont, noEscape, new Vector2(192, 152), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                graphics.DrawString(TextUtils.dialogFont, instructions, new Vector2(192, 128), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                graphics.DrawString(TextUtils.dialogFont, noEscape, new Vector2(192, 152), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
         }
 
@@ -142,8 +142,8 @@ namespace space_planet_sandbox.gui
             var color = mousedOver ? Color.LimeGreen : Color.White;
             graphics.Draw(SandboxGame.loadedTextures["menu_frame"], new Vector2(x, y), color);
             graphics.Draw(SandboxGame.loadedTextures["menu_frame_condensed"], new Vector2(x + 240, y), color);
-            graphics.DrawString(SandboxGame.dialogFont, controlLabel, new Vector2(x + 32, y + 12), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-            graphics.DrawString(SandboxGame.dialogFont, keyLabel, new Vector2(x + 252, y + 12), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            graphics.DrawString(TextUtils.dialogFont, controlLabel, new Vector2(x + 32, y + 12), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            graphics.DrawString(TextUtils.dialogFont, keyLabel, new Vector2(x + 252, y + 12), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
 
         public void Update(Point mousePosition)

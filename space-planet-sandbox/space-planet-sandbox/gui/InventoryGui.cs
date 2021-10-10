@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
+using space_planet_sandbox.entities.player;
 
 namespace space_planet_sandbox.gui
 {
@@ -13,6 +14,7 @@ namespace space_planet_sandbox.gui
 
         private Texture2D background;
         private PlayerInventory inventory;
+        private PlayerCharacter player;
         
         private Vector2 position;
 
@@ -33,9 +35,10 @@ namespace space_planet_sandbox.gui
             
         }
 
-        public void Open(PlayerInventory playerInventory)
+        public void Open(PlayerInventory playerInventory, PlayerCharacter activePlayer)
         {
             isOpen = true;
+            player = activePlayer;
             SetInventory(playerInventory);
         }
 
@@ -60,7 +63,7 @@ namespace space_planet_sandbox.gui
             if (InputUtils.LeftMouse)
             {
                 var mousePosition = InputUtils.GetMouseScreenPosition();
-                clicked = MouseInItemGrid(mousePosition) || MouseOverHotbar(mousePosition);
+                clicked = MouseInItemGrid(mousePosition) || MouseOverHotbar(mousePosition) || grabbedIndex != -1;
             }
         }
 
@@ -113,8 +116,14 @@ namespace space_planet_sandbox.gui
                 grabbedItem = null;
                 grabbedIndex = -1;
             }
+            if (InputUtils.RightMouseClicked && grabbedIndex != -1)
+            {
+                player.DropItem(grabbedItem);
+                inventory.Remove(grabbedItem.tab, grabbedIndex);
+                inventory.RemoveFromHotbar(grabbedItem);
+                grabbedItem = null;
+            }
             if (InputUtils.GetKeyPressed("escape")) Close();
-            clicked = MouseInItemGrid(mousePosition);
         }
 
         private bool MouseInItemGrid(Point mousePosition)

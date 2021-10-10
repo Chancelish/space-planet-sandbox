@@ -70,7 +70,7 @@ namespace space_planet_sandbox.gui
             return inventoryGui.GetHighlightedItem();
         }
 
-        public void OpenIventory(PlayerInventory inventory)
+        public void OpenIventory(PlayerInventory inventory, entities.player.PlayerCharacter player)
         {
             if (inventoryGui.isOpen)
             {
@@ -79,7 +79,8 @@ namespace space_planet_sandbox.gui
             }
             else
             {
-                inventoryGui.Open(inventory);
+                inventoryGui.Open(inventory, player);
+                guiState = GuiState.Inventory;
             }
         }
 
