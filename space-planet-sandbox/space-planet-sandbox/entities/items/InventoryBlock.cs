@@ -28,7 +28,7 @@ namespace space_planet_sandbox.entities.items
         public override void OnDrop(Point cursorLocation, CollidableEntity callingEntity, World targetWorld)
         {
             targetWorld.AddEntity(new WorldBlock(callingEntity.Position().X + callingEntity.GetSize().X / 2,
-                callingEntity.Position().Y + callingEntity.GetSize().Y / 2,
+                callingEntity.Position().Y,
                 quantity,
                 name,
                 cursorLocation.X));
