@@ -20,6 +20,8 @@ namespace space_planet_sandbox.entities.items
             attackPower = 2f;
             icon = SandboxGame.loadedTextures["temppickaxeicon"];
             usable = true;
+            tab = InventoryTab.Equipment;
+            name = "pickaxe";
         }
 
         public override void OnDrop(Point cursorLocation, CollidableEntity callingEntity, World targetWorld)

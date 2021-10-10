@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Text;
 
@@ -6,6 +7,10 @@ namespace space_planet_sandbox
 {
     public sealed class TextUtils
     {
+        public static SpriteFont defaultFont { get; private set; }
+        public static SpriteFont dialogFont { get; private set; }
+        public static SpriteFont smolFont { get; private set; }
+
         public static void RenderOutlinedText(SpriteBatch graphics, SpriteFont font, string text, int x, int y)
         {
             var textLocation = new Vector2(x - 1, y - 1);
@@ -18,6 +23,13 @@ namespace space_planet_sandbox
             graphics.DrawString(font, text, textLocation4, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             var textLocation5 = new Vector2(x, y);
             graphics.DrawString(font, text, textLocation5, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+        }
+
+        public static void LoadFonts(ContentManager content)
+        {
+            defaultFont = content.Load<SpriteFont>("default");
+            dialogFont = content.Load<SpriteFont>("dialog");
+            smolFont = content.Load<SpriteFont>("smolprint");
         }
     }
 }

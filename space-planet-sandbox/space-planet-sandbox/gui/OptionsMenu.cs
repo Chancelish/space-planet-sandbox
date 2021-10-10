@@ -73,7 +73,7 @@ namespace space_planet_sandbox.gui
                 var boxPosition = new Vector2(backgroundX + 32, backgroundY + (44 + 48 * i));
                 graphics.Draw(textFrame, boxPosition, null, color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
                 var textLocation = new Vector2(backgroundX + 60, backgroundY + (56 + 48 * i));
-                graphics.DrawString(SandboxGame.dialogFont, options[i], textLocation, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                graphics.DrawString(TextUtils.dialogFont, options[i], textLocation, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
         }
 

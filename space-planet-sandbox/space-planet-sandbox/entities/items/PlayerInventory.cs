@@ -59,6 +59,11 @@ namespace space_planet_sandbox.entities.items
             return inventorySlots[selectedTab][index];
         }
 
+        public InventoryItem GetItemAt(InventoryTab tab, int index)
+        {
+            return inventorySlots[tab][index];
+        }
+
         public void Remove(InventoryTab tab, int index)
         {
             inventorySlots[tab][index] = null;
@@ -101,6 +106,14 @@ namespace space_planet_sandbox.entities.items
             itemsOnHotbar[index] = null;
         }
 
+        public void RemoveFromHotbar(InventoryItem item)
+        {
+            for (int i = 0; i < itemsOnHotbar.Length; i++)
+            {
+                if (item == itemsOnHotbar[i]) itemsOnHotbar[i] = null;
+            }
+        }
+
         public void PlaceOnHotbar(int index, InventoryItem usable)
         {
             if (usable == null) return;
@@ -127,7 +140,7 @@ namespace space_planet_sandbox.entities.items
                     itemsOnHotbar[i].Render(graphics, xi, hotbarY);
                 }
 
-                TextUtils.RenderOutlinedText(graphics, SandboxGame.defaultFont, label, hotbarX + 22 + 32 * i, hotbarY + 18);
+                TextUtils.RenderOutlinedText(graphics, TextUtils.defaultFont, label, hotbarX + 22 + 32 * i, hotbarY + 18);
             }
         }
 

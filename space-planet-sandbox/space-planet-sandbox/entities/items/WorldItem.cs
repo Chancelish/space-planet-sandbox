@@ -9,10 +9,11 @@ namespace space_planet_sandbox.entities.items
 {
     public abstract class WorldItem : CollidableEntity
     {
-        public InventoryItem associatedItem { get; private set; }
+        public InventoryItem associatedItem { get; protected set; }
         protected HitBox hitBox;
+        public string name { get; protected set; }
 
-        public abstract void OnCollision(player.PlayerCharacter entity, PlayerInventory inventory);
+        public abstract void Collect(player.PlayerCharacter entity, PlayerInventory inventory);
         
         public override ICollisionMask GetCollisionMask()
         {

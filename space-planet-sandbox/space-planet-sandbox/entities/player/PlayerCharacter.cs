@@ -14,6 +14,7 @@ namespace space_planet_sandbox.entities.player
         private double xVelocity = 0;
         private double yVelocity = 0;
         private Texture2D sprite;
+        private double timeSinceDropped = 1;
 
         private Texture2D boxOutline;
         private PlayerInventory inventory;
@@ -50,38 +51,52 @@ namespace space_planet_sandbox.entities.player
             int xCheck = (int) (xVelocity + Math.Sign(xVelocity));
             int yCheck = (int) (yVelocity + Math.Sign(yVelocity));
 
-            if (possibleCollisions.ContainsKey("tiles"))
+            var tiles = ExtractByCollisionGroup(possibleCollisions, this, "tiles");
+            foreach (var chunk in tiles)
             {
-                foreach (var chunk in possibleCollisions["tiles"])
+                if (Collide(chunk, xCheck, 0))
                 {
-                    if (Collide(chunk, xCheck, 0))
+                    while (xCheck != 0)
                     {
-                        while (xCheck != 0)
+                        xCheck = xCheck > 0 ? xCheck - 1 : xCheck + 1;
+                        xVelocity = xCheck;
+                        if (!Collide(chunk, xCheck, 0))
                         {
-                            xCheck = xCheck > 0 ? xCheck - 1 : xCheck + 1;
-                            xVelocity = xCheck;
-                            if (!Collide(chunk, xCheck, 0))
-                            {
-                                break;
-                            }
+                            break;
                         }
-                        break;
                     }
+                    break;
                 }
-                foreach (var chunk in possibleCollisions["tiles"])
+            }
+            foreach (var chunk in tiles)
+            {
+                if (Collide(chunk, 0, yCheck))
                 {
-                    if (Collide(chunk, 0, yCheck))
+                    while (yCheck != 0)
                     {
-                        while (yCheck != 0)
+                        yCheck = yCheck > 0 ? yCheck - 1 : yCheck + 1;
+                        yVelocity = yCheck;
+                        if (!Collide(chunk, 0, yCheck))
                         {
-                            yCheck = yCheck > 0 ? yCheck - 1 : yCheck + 1;
-                            yVelocity = yCheck;
-                            if (!Collide(chunk, 0, yCheck))
-                            {
-                                break;
-                            }
+                            break;
                         }
-                        break;
+                    }
+                    break;
+                }
+            }
+
+            var items = ExtractByCollisionGroup(possibleCollisions, this, "item");
+            if (timeSinceDropped > 0)
+            {
+                timeSinceDropped -= time.ElapsedGameTime.TotalSeconds;
+            }
+            else
+            {
+                foreach (var item in items)
+                {
+                    if (Collide(item, 0, 0))
+                    {
+                        (item as WorldItem).Collect(this, inventory);
                     }
                 }
             }
@@ -117,6 +132,12 @@ namespace space_planet_sandbox.entities.player
             return hurtBox.Size();
         }
 
+        public void DropItem(InventoryItem item)
+        {
+            item.OnDrop(InputUtils.GetMouseWorldPosition(), this, myWorld);
+            timeSinceDropped = 1f;
+        }
+
         private void CheckPlayerInput(GameTime time)
         {
             var mouseWorldPosition = InputUtils.GetMouseWorldPosition();
@@ -126,7 +147,7 @@ namespace space_planet_sandbox.entities.player
                 SandboxGame.gui.GetHighlightedItem().OnUse(new Point(mouseWorldPosition.X, mouseWorldPosition.Y), this, myWorld);
             }
 
-            if (InputUtils.GetKeyState("Inventory") && !InputUtils.GetLastFrameKeyState("Inventory")) SandboxGame.gui.OpenIventory(inventory);
+            if (InputUtils.GetKeyState("Inventory") && !InputUtils.GetLastFrameKeyState("Inventory")) SandboxGame.gui.OpenIventory(inventory, this);
 
             if (InputUtils.GetKeyState("Up"))
                 yVelocity -= speed * time.ElapsedGameTime.TotalSeconds;
