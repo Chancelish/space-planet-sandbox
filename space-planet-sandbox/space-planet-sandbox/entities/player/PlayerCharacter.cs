@@ -16,6 +16,7 @@ namespace space_planet_sandbox.entities.player
         private Texture2D sprite;
         private double timeSinceDropped = 1;
         public float lastFrameTime { get; private set; }
+        private bool lookingRight = false;
 
         private Texture2D boxOutline;
         private PlayerInventory inventory;
@@ -126,7 +127,7 @@ namespace space_planet_sandbox.entities.player
                 0f,
                 Vector2.Zero,
                 1f,
-                SpriteEffects.None,
+                lookingRight ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                 0f);
         }
 
@@ -158,11 +159,17 @@ namespace space_planet_sandbox.entities.player
             if (InputUtils.GetKeyState("Down"))
                 yVelocity += speed * time.ElapsedGameTime.TotalSeconds;
 
-            if (InputUtils.GetKeyState("Left"))
+            if (InputUtils.GetKeyState("Left")) {
                 xVelocity -= speed * time.ElapsedGameTime.TotalSeconds;
-
-            if (InputUtils.GetKeyState("Right"))
+                lookingRight = false;
+            }
+                
+            if (InputUtils.GetKeyState("Right")) {
                 xVelocity += speed * time.ElapsedGameTime.TotalSeconds;
+                lookingRight = true;
+                // gotta look where ya going!
+            }
+                
         }
     }
 }
