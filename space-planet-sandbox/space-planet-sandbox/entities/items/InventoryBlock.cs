@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using space_planet_sandbox.entities.player;
 using space_planet_sandbox.world;
 
 namespace space_planet_sandbox.entities.items
@@ -17,7 +18,7 @@ namespace space_planet_sandbox.entities.items
             tab = InventoryTab.Equipment; //TODO: put things in correct tab once tabs work.
         }
 
-        public override void OnUse(Point cursorLocation, CollidableEntity callingEntity, World targetWorld)
+        public override void OnUse(Point cursorLocation, PlayerCharacter callingEntity, World targetWorld)
         {
             if (!targetWorld.IsPlacementBlocked())
             {
@@ -25,7 +26,7 @@ namespace space_planet_sandbox.entities.items
             }
         }
 
-        public override void OnDrop(Point cursorLocation, CollidableEntity callingEntity, World targetWorld)
+        public override void OnDrop(Point cursorLocation, PlayerCharacter callingEntity, World targetWorld)
         {
             targetWorld.AddEntity(new WorldBlock(callingEntity.Position().X + callingEntity.GetSize().X / 2,
                 callingEntity.Position().Y,

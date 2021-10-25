@@ -13,6 +13,7 @@ namespace space_planet_sandbox.world
     public class World
     {
         private List<CollidableEntity> entities;
+        private HashSet<CollidableEntity> entitiesToAdd;
 
         private readonly int chunkWidth;
         private readonly int chunkHeight;
@@ -53,6 +54,7 @@ namespace space_planet_sandbox.world
             blockPreview.SetWorld(this);
 
             entities = new List<CollidableEntity>();
+            entitiesToAdd = new HashSet<CollidableEntity>();
             AddEntity(player);
 
             chunks = new TileMap[width, height];
@@ -93,7 +95,7 @@ namespace space_planet_sandbox.world
             return false;
         }
 
-        public bool MineTile(int x, int y, float miningPower)
+        public bool MineTile(int x, int y)
         {
             int xChunk = x / chunkPixelSize;
             int yChunk = y / chunkPixelSize;
@@ -169,8 +171,14 @@ namespace space_planet_sandbox.world
 
         public void AddEntity(CollidableEntity entity)
         {
-            entities.Add(entity);
+            entitiesToAdd.Add(entity);
             entity.SetWorld(this);
+        }
+
+        private void ResolveAdded()
+        {
+            entities.AddRange(entitiesToAdd);
+            entitiesToAdd.Clear();
         }
 
         public Dictionary<String, HashSet<CollidableEntity>> GetPotentialCollisions(int x, int y, int width, int height)
@@ -245,6 +253,7 @@ namespace space_planet_sandbox.world
                 }
             }
             entities.RemoveAll(entity => entity.flaggedForRemoval);
+            ResolveAdded();
         }
 
         private bool IsEntityActive(CollidableEntity entity)

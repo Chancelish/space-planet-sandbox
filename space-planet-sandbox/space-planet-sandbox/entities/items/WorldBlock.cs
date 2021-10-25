@@ -11,7 +11,8 @@ namespace space_planet_sandbox.entities.items
     {
         private float gravity = 250f;
         private float terminalVelocity = 500f;
-        private float friction = 0.03f;
+        private float airResistance = 0.03f;
+        private float groundFriction = 5f;
         private float xVelocity;
         private float yVelocity;
         private bool onGround;
@@ -21,7 +22,7 @@ namespace space_planet_sandbox.entities.items
         {
             name = block;
             associatedItem = new InventoryBlock(block, 1000, quantity);
-            yVelocity = -40f;
+            yVelocity = -50f;
             icon = SandboxGame.loadedTextures[block];
             var rand = new Random();
             xVelocity = (float) (rand.NextDouble() - 0.5) * 100f;
@@ -35,9 +36,9 @@ namespace space_planet_sandbox.entities.items
         {
             name = block;
             associatedItem = new InventoryBlock(block, 1000, quantity);
-            yVelocity = -60f;
+            yVelocity = -80f;
             icon = SandboxGame.loadedTextures[block];
-            xVelocity = mouseX > _x ? 100f : -100f;
+            xVelocity = mouseX > _x ? 120f : -120f;
             x = _x;
             y = _y;
             hitBox = new collisiondetection.HitBox((int) _x, (int) _y, 12, 12);
@@ -121,11 +122,14 @@ namespace space_planet_sandbox.entities.items
             var deltaT = (float) time.ElapsedGameTime.TotalSeconds;
             yVelocity += gravity * deltaT;
             if (yVelocity > terminalVelocity) yVelocity = terminalVelocity;
-
-            xVelocity -= xVelocity * deltaT * (onGround ? friction * 90 : friction);
-            if (Math.Abs(xVelocity) < 5f)
+            var friction = onGround ? groundFriction : airResistance;
+            if (Math.Abs(xVelocity) < friction * 2f)
             {
                 xVelocity = 0;
+            }
+            else
+            {
+                xVelocity -= xVelocity * deltaT * friction;
             }
 
             var deltaX = xVelocity * deltaT;

@@ -15,6 +15,7 @@ namespace space_planet_sandbox.entities.player
         private double yVelocity = 0;
         private Texture2D sprite;
         private double timeSinceDropped = 1;
+        public float lastFrameTime { get; private set; }
 
         private Texture2D boxOutline;
         private PlayerInventory inventory;
@@ -28,6 +29,7 @@ namespace space_planet_sandbox.entities.player
             collisionGroup = "player";
             inventory = new PlayerInventory();
             SandboxGame.gui.SetInventory(inventory);
+            lastFrameTime = 0.5f;
         }
         public override ICollisionMask GetCollisionMask()
         {
@@ -36,6 +38,7 @@ namespace space_planet_sandbox.entities.player
 
         public override void Update(GameTime time)
         {
+            lastFrameTime =(float) time.ElapsedGameTime.TotalSeconds;
             SandboxGame.camera.Follow(this, 1280, 720);
 
             var possibleCollisions = myWorld.GetPotentialCollisions((int) x, (int) y, hurtBox.Size().X, hurtBox.Size().Y);
