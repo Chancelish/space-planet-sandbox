@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using space_planet_sandbox.entities.player;
 using space_planet_sandbox.world;
 
 namespace space_planet_sandbox.entities.items
@@ -22,9 +23,9 @@ namespace space_planet_sandbox.entities.items
         }
         protected Texture2D icon;
 
-        public abstract void OnUse(Point cursorLocation, CollidableEntity callingEntity, World targetWorld);
+        public abstract void OnUse(Point cursorLocation, PlayerCharacter callingEntity, World targetWorld);
 
-        public abstract void OnDrop(Point cursorLocation, CollidableEntity callingEntity, World targetWorld);
+        public abstract void OnDrop(Point cursorLocation, PlayerCharacter callingEntity, World targetWorld);
 
         public abstract void Render(SpriteBatch graphics, float x, float y);
     }

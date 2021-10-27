@@ -73,6 +73,7 @@ namespace space_planet_sandbox
             LoadTexture("forbidden_x");
             LoadTexture("menu_frame");
             LoadTexture("menu_frame_condensed");
+            LoadTexture("mining_overlay");
 
             TextUtils.LoadFonts(Content);
 

@@ -128,7 +128,7 @@ namespace space_planet_sandbox.gui
 
         private bool MouseInItemGrid(Point mousePosition)
         {
-            return mousePosition.X > position.X && mousePosition.Y > position.Y + 16 && mousePosition.X < position.X + 320 && mousePosition.Y < position.Y + 208;
+            return mousePosition.X > position.X && mousePosition.Y > position.Y + 16 && mousePosition.X < position.X + 320 && mousePosition.Y < position.Y + 208 && isOpen;
         }
 
         private bool MouseOverHotbar(Point mousePosition)

@@ -15,6 +15,8 @@ namespace space_planet_sandbox.entities.player
         private double yVelocity = 0;
         private Texture2D sprite;
         private double timeSinceDropped = 1;
+        public float lastFrameTime { get; private set; }
+        private bool lookingRight = false;
 
         private Texture2D boxOutline;
         private PlayerInventory inventory;
@@ -28,6 +30,7 @@ namespace space_planet_sandbox.entities.player
             collisionGroup = "player";
             inventory = new PlayerInventory();
             SandboxGame.gui.SetInventory(inventory);
+            lastFrameTime = 0.5f;
         }
         public override ICollisionMask GetCollisionMask()
         {
@@ -36,6 +39,7 @@ namespace space_planet_sandbox.entities.player
 
         public override void Update(GameTime time)
         {
+            lastFrameTime =(float) time.ElapsedGameTime.TotalSeconds;
             SandboxGame.camera.Follow(this, 1280, 720);
 
             var possibleCollisions = myWorld.GetPotentialCollisions((int) x, (int) y, hurtBox.Size().X, hurtBox.Size().Y);
@@ -123,7 +127,7 @@ namespace space_planet_sandbox.entities.player
                 0f,
                 Vector2.Zero,
                 1f,
-                SpriteEffects.None,
+                lookingRight ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                 0f);
         }
 
@@ -155,11 +159,17 @@ namespace space_planet_sandbox.entities.player
             if (InputUtils.GetKeyState("Down"))
                 yVelocity += speed * time.ElapsedGameTime.TotalSeconds;
 
-            if (InputUtils.GetKeyState("Left"))
+            if (InputUtils.GetKeyState("Left")) {
                 xVelocity -= speed * time.ElapsedGameTime.TotalSeconds;
-
-            if (InputUtils.GetKeyState("Right"))
+                lookingRight = false;
+            }
+                
+            if (InputUtils.GetKeyState("Right")) {
                 xVelocity += speed * time.ElapsedGameTime.TotalSeconds;
+                lookingRight = true;
+                // gotta look where ya going!
+            }
+                
         }
     }
 }

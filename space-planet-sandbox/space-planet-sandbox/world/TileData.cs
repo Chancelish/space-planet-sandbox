@@ -42,9 +42,7 @@ namespace space_planet_sandbox.world
         {
             var tileDataAbridged = new TileDataAbridged();
             tileDataAbridged.behaviorTag = behaviorTag;
-            tileDataAbridged.durability = tileDataAbridged.maxDurability = maxDurability;
             tileDataAbridged.tileName = tileName;
-            tileDataAbridged.toughness = toughness;
             tileDataAbridged.tileIndex = 0;
             return tileDataAbridged;
         }
@@ -53,9 +51,6 @@ namespace space_planet_sandbox.world
     public struct TileDataAbridged //excludes biome tags to cute down om memory use.
     {
         public int tileIndex;
-        public float maxDurability;
-        public float durability;
-        public float toughness;
         public string tileName;
         public TileBehavior behaviorTag;
     }
