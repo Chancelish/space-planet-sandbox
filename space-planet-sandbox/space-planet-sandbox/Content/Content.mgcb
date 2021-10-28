@@ -123,6 +123,18 @@
 /processorParam:TextureFormat=Color
 /build:menu_frame_condensed.png
 
+#begin mining_overlay.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:mining_overlay.png
+
 #begin pink_mountain_bg.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -134,6 +146,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:pink_mountain_bg.png
+
+#begin rustic_brick_blue.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:rustic_brick_blue.png
 
 #begin sand.png
 /importer:TextureImporter
