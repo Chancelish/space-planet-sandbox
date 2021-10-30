@@ -26,7 +26,11 @@ namespace space_planet_sandbox.entities.items
             else if (x >= targetWorld.pixelWorldWidth) x -= targetWorld.pixelWorldWidth;
             if (!targetWorld.IsPlacementBlocked())
             {
-                if (targetWorld.PlaceTile(x, y, name)) quantity--;
+                if (targetWorld.PlaceTile(x, y, name))
+                {
+                    callingEntity.cooldown = 0.05;
+                    quantity--;
+                }
             }
         }
 

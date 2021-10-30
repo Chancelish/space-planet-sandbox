@@ -15,6 +15,7 @@ namespace space_planet_sandbox.entities.player
         private double yVelocity = 0;
         private Texture2D sprite;
         private double timeSinceDropped = 1;
+        public double cooldown;
         public float lastFrameTime { get; private set; }
         private bool lookingRight = false;
 
@@ -143,7 +144,9 @@ namespace space_planet_sandbox.entities.player
         {
             var mouseWorldPosition = InputUtils.GetMouseWorldPosition();
 
-            if (InputUtils.LeftMouse && inventory.GetHighlightedItem() != null && !SandboxGame.gui.clicked)
+            cooldown -= time.ElapsedGameTime.TotalSeconds;
+
+            if (InputUtils.LeftMouse && inventory.GetHighlightedItem() != null && !SandboxGame.gui.clicked && cooldown < 0.0)
             {
                 SandboxGame.gui.GetHighlightedItem().OnUse(new Point(mouseWorldPosition.X, mouseWorldPosition.Y), this, myWorld);
             }
