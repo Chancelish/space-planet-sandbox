@@ -176,7 +176,6 @@ namespace space_planet_sandbox.world
                     }
                 }
             }
-            myWorld.AddEntity(new entities.items.WorldBlock(xLoc, yLoc, 1, tileData[xTile, yTile].tileName));
             tileData[xTile, yTile] = TileDataDictionary.GetTile(EMPTY).Abridge();
             grid.ChangeTile(xTile, yTile, 0);
             return true;

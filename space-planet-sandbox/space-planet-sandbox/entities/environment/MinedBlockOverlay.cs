@@ -18,11 +18,13 @@ namespace space_planet_sandbox.entities.environment
         private int frame;
         private Texture2D sprite;
         private bool beingMined;
+        private string name;
 
         public MinedBlockOverlay(int _x, int _y, string blockName)
         {
             x = _x;
             y = _y;
+            name = blockName;
             var blockTemplate = world.TileDataDictionary.GetTile(blockName);
             toughness = blockTemplate.toughness;
             maxDurability = durability = blockTemplate.maxDurability;
@@ -72,6 +74,7 @@ namespace space_planet_sandbox.entities.environment
                 {
                     flaggedForRemoval = true;
                     myWorld.MineTile((int) x + 1, (int) y + 1);
+                    myWorld.AddEntity(new items.WorldBlock(x, y, 1, name));
                 }
                 beingMined = false;
             }

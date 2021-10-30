@@ -179,7 +179,7 @@ namespace space_planet_sandbox.entities.items
                 else onGround = false;
             }
 
-            Displace(deltaX, deltaX);
+            Displace(deltaX, deltaY);
         }
     }
 }
