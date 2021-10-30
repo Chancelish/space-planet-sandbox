@@ -20,9 +20,13 @@ namespace space_planet_sandbox.entities.items
 
         public override void OnUse(Point cursorLocation, PlayerCharacter callingEntity, World targetWorld)
         {
+            int x = cursorLocation.X;
+            int y = cursorLocation.Y;
+            if (x < 0) x += targetWorld.pixelWorldWidth;
+            else if (x >= targetWorld.pixelWorldWidth) x -= targetWorld.pixelWorldWidth;
             if (!targetWorld.IsPlacementBlocked())
             {
-                if (targetWorld.PlaceTile(cursorLocation.X, cursorLocation.Y, name)) quantity--;
+                if (targetWorld.PlaceTile(x, y, name)) quantity--;
             }
         }
 
