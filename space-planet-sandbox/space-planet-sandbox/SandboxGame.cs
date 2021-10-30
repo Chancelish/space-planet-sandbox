@@ -25,8 +25,6 @@ namespace space_planet_sandbox
         private RenderTarget2D actionLayer;
         private RenderTarget2D guiLayer;
 
-        private Texture2D gorilla;
-
         private World testWorld;
 
         public SandboxGame()
@@ -62,9 +60,8 @@ namespace space_planet_sandbox
             TileDataDictionary.LoadTiles();
 
             // TODO: use this.Content to load your game content here
-            gorilla = Content.Load<Texture2D>("pink_mountain_bg");
             LoadTexture("unknown");
-            LoadTexture("ground_tiles_and_plants");
+            LoadTexture("dirt");
             LoadTexture("close_icon_v1");
             LoadTexture("inventory_core");
             LoadTexture("hotbarframe");
@@ -74,6 +71,7 @@ namespace space_planet_sandbox
             LoadTexture("menu_frame");
             LoadTexture("menu_frame_condensed");
             LoadTexture("mining_overlay");
+            LoadTexture("mountain_1");
 
             TextUtils.LoadFonts(Content);
 
@@ -107,10 +105,6 @@ namespace space_planet_sandbox
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, transformMatrix: camera.Transform);
-            int x1 = FindParallaxPosition(camera.x, 4);
-            int x2 = FindParallaxPosition(camera.x, 4, 1280);
-            spriteBatch.Draw(gorilla, new Vector2(x1, camera.y / 4), Color.White);
-            spriteBatch.Draw(gorilla, new Vector2(x2, camera.y / 4), Color.White);
 
             testWorld.Render(spriteBatch);
 
@@ -118,33 +112,19 @@ namespace space_planet_sandbox
 
             GraphicsDevice.SetRenderTarget(guiLayer);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
             spriteBatch.Draw(actionLayer, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             gui.Render(spriteBatch);
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp);
             
             spriteBatch.Draw(guiLayer, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, renderScale, SpriteEffects.None, 0f);
             spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        private int FindParallaxPosition(int cameraX, float ratio, int displacement = 0)
-        {
-            int x1 = (int) (camera.x / ratio) + displacement;
-            while (x1 > camera.x + 1280)
-            {
-                x1 -= 2560;
-            }
-            while (x1 < camera.x - 1280)
-            {
-                x1 += 2560;
-            }
-            return x1;
         }
 
         private void OnResize(Object sender, EventArgs e)

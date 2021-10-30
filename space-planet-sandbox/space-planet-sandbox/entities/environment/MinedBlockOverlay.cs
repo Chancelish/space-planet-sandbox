@@ -58,9 +58,9 @@ namespace space_planet_sandbox.entities.environment
             return hitBox.Size();
         }
 
-        public override void Render(SpriteBatch graphics)
+        public override void Render(SpriteBatch graphics, float xDisplacement = 0, float yDisplacement = 0)
         {
-            graphics.Draw(sprite, new Vector2(x, y), new Rectangle(16 * frame, 0, 16, 16), Color.White);
+            graphics.Draw(sprite, new Vector2(x + xDisplacement, y + yDisplacement), new Rectangle(16 * frame, 0, 16, 16), Color.White);
         }
 
         public override void Update(GameTime time)

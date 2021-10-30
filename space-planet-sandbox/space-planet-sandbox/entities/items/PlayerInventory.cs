@@ -41,7 +41,7 @@ namespace space_planet_sandbox.entities.items
             hotbarSprite = SandboxGame.loadedTextures["hotbarframe"];
             selectedItem = 0;
             inventorySlots[InventoryTab.Equipment][1] = itemsOnHotbar[1] = new InventoryPickaxe();
-            inventorySlots[InventoryTab.Equipment][2] = itemsOnHotbar[2] = new InventoryBlock("ground_tiles_and_plants", 1000, 64);
+            inventorySlots[InventoryTab.Equipment][2] = itemsOnHotbar[2] = new InventoryBlock("dirt", 1000, 64);
             inventorySlots[InventoryTab.Equipment][3] = itemsOnHotbar[3] = new InventoryBlock("sand", 1000, 32);
         }
 

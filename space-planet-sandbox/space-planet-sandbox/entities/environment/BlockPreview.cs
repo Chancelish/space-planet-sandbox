@@ -35,13 +35,13 @@ namespace space_planet_sandbox.entities.environment
             return hitBox.Size();
         }
 
-        public override void Render(SpriteBatch graphics)
+        public override void Render(SpriteBatch graphics, float xDisplacement = 0, float yDisplacement = 0)
         {
             if (SandboxGame.gui.GetHighlightedItem() != null && SandboxGame.gui.GetHighlightedItem() is InventoryBlock)
             {
                 var block = (InventoryBlock)SandboxGame.gui.GetHighlightedItem();
                 var cornerOfTexture = new Rectangle(0, 0, 16, 16);
-                var position = new Vector2(x, y);
+                var position = new Vector2(x + xDisplacement, y + yDisplacement);
                 Color transparency = new Color(1.0f, 1.0f, 1.0f, 0.3f);
                 graphics.Draw(SandboxGame.loadedTextures[block.name], position, cornerOfTexture, transparency, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
                 if (placementBlocked)

@@ -58,10 +58,10 @@ namespace space_planet_sandbox.entities.environment
             }
         }
 
-        public override void Render(SpriteBatch graphics)
+        public override void Render(SpriteBatch graphics, float xDisplacement = 0, float yDisplacement = 0)
         {
             graphics.Draw(sprite,
-                new Vector2(x, y),
+                new Vector2(x + xDisplacement, y + yDisplacement),
                 null,
                 Color.White,
                 0f,

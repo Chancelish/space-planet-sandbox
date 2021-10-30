@@ -21,7 +21,7 @@ namespace space_planet_sandbox.entities
 
         public abstract void Update(GameTime time);
 
-        public abstract void Render(SpriteBatch graphics);
+        public abstract void Render(SpriteBatch graphics, float xDisplacement = 0, float yDisplacement = 0);
 
         public bool Collide(CollidableEntity other, int xOffset, int yOffset)
         {
@@ -31,6 +31,14 @@ namespace space_planet_sandbox.entities
         public Vector2 Position()
         {
             return new Vector2(x, y);
+        }
+
+        public void Displace(float _x, float _y)
+        {
+            x += _x;
+            y += _y;
+            if (y < 0) y = 0;
+            GetCollisionMask().MoveTo((int) x, (int) y);
         }
 
         public abstract Point GetSize();
@@ -52,6 +60,20 @@ namespace space_planet_sandbox.entities
             }
             returnValue.RemoveWhere(entity => entity == requester);
             return returnValue;
+        }
+
+        protected bool WorldWrapCollisionCheck(CollidableEntity other, int xOffset, int yOffset)
+        {
+            var width = GetSize().X;
+            if (x + xOffset + width > myWorld.pixelWorldWidth)
+            {
+                return Collide(other, xOffset - myWorld.pixelWorldWidth, yOffset);
+            }
+            if (x + xOffset <= 0)
+            {
+                return Collide(other, xOffset + myWorld.pixelWorldWidth, yOffset);
+            }
+            return false;
         }
     }
 }

@@ -50,14 +50,12 @@ namespace space_planet_sandbox.world
                     }
                     else if ((iy * 16) + yOrigin == 320)
                     {
-                        tileData[ix, iy] = TileDataDictionary.GetTile("ground_tiles_and_plants").Abridge();
-                        tileData[ix, iy].tileIndex = 1;
+                        tileData[ix, iy] = TileDataDictionary.GetTile("dirt").Abridge();
                         grid.ChangeTile(ix, iy, 1);
                     }
                     else
                     {
-                        tileData[ix, iy] = TileDataDictionary.GetTile("ground_tiles_and_plants").Abridge();
-                        tileData[ix, iy].tileIndex = 3;
+                        tileData[ix, iy] = TileDataDictionary.GetTile("dirt").Abridge();
                         grid.ChangeTile(ix, iy, 1);
                     }
                 }
@@ -107,8 +105,10 @@ namespace space_planet_sandbox.world
             }
         }
 
-        public override void Render(SpriteBatch graphics)
+        public override void Render(SpriteBatch graphics, float xDisplacement = 0, float yDisplacement = 0)
         {
+            var _x = (int)xDisplacement;
+            var _y = (int)yDisplacement;
             for (int ix = 0; ix < tileWidth; ix++)
             {
                 for (int iy = 0; iy < tileHeight; iy++)
@@ -116,7 +116,7 @@ namespace space_planet_sandbox.world
                     if (!tileData[ix,iy].tileName.Equals(EMPTY))
                     {
                         graphics.Draw(SandboxGame.loadedTextures[tileData[ix,iy].tileName],
-                            new Rectangle(originX + ix * tileSize, originY + iy * tileSize, tileSize, tileSize),
+                            new Rectangle(originX + ix * tileSize + _x, originY + iy * tileSize + _y, tileSize, tileSize),
                             new Rectangle(tileData[ix, iy].tileIndex * tileSize, 0, tileSize, tileSize),
                             Color.White);
                     }

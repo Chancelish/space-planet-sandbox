@@ -62,7 +62,7 @@ namespace space_planet_sandbox.world
         public static void LoadTiles() // in the future load from json file.
         {
             knownTiles.Add("empty", new TileData(0, 0, TileBehavior.None, "empty"));
-            knownTiles.Add("ground_tiles_and_plants", new TileData(10, 0, TileBehavior.Basic, "ground_tiles_and_plants", "forest", "plains"));
+            knownTiles.Add("dirt", new TileData(10, 0, TileBehavior.Basic, "dirt", "forest", "plains"));
             knownTiles.Add("sand", new TileData(8, 0, TileBehavior.Sand, "sand", "desert", "beach"));
         }
 

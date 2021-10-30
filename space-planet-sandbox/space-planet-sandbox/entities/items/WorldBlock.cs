@@ -77,10 +77,10 @@ namespace space_planet_sandbox.entities.items
             return hitBox.Size();
         }
 
-        public override void Render(SpriteBatch graphics)
+        public override void Render(SpriteBatch graphics, float xDisplacement = 0, float yDisplacement = 0)
         {
             var cornerOfTexture = new Rectangle(0, 0, 16, 16);
-            graphics.Draw(icon, new Vector2(x, y), cornerOfTexture, Color.White);
+            graphics.Draw(icon, new Vector2(x + xDisplacement, y + yDisplacement), cornerOfTexture, Color.White);
             if (associatedItem.quantity > 1)
             {
                 graphics.Draw(icon, new Vector2(x - 3, y - 3), cornerOfTexture, Color.White);
@@ -138,15 +138,17 @@ namespace space_planet_sandbox.entities.items
             int xCheck = (int)(deltaX + Math.Sign(xVelocity));
             int yCheck = (int)(deltaY + Math.Sign(yVelocity));
 
-            foreach (var chunk in possibleCollisions["tiles"])
+            var tiles = ExtractByCollisionGroup(possibleCollisions, null, "tiles");
+
+            foreach (var chunk in tiles)
             {
-                if (Collide(chunk, xCheck, 0))
+                if (Collide(chunk, xCheck, 0) || WorldWrapCollisionCheck(chunk, xCheck, 0))
                 {
                     while (xCheck != 0)
                     {
                         xCheck = xCheck > 0 ? xCheck - 1 : xCheck + 1;
                         deltaX = xCheck;
-                        if (!Collide(chunk, xCheck, 0))
+                        if (!Collide(chunk, xCheck, 0) && !WorldWrapCollisionCheck(chunk, xCheck, 0))
                         {
                             xVelocity = deltaX / deltaT;
                             break;
@@ -156,15 +158,15 @@ namespace space_planet_sandbox.entities.items
                     break;
                 }
             }
-            foreach (var chunk in possibleCollisions["tiles"])
+            foreach (var chunk in tiles)
             {
-                if (Collide(chunk, 0, yCheck))
+                if (Collide(chunk, 0, yCheck) || WorldWrapCollisionCheck(chunk, 0, yCheck))
                 {
                     while (yCheck != 0)
                     {
                         yCheck = yCheck > 0 ? yCheck - 1 : yCheck + 1;
                         deltaY = yCheck;
-                        if (!Collide(chunk, 0, yCheck))
+                        if (!(Collide(chunk, 0, yCheck) || WorldWrapCollisionCheck(chunk, 0, yCheck)))
                         {
                             yVelocity = deltaY / deltaT;
                             break;
@@ -177,10 +179,7 @@ namespace space_planet_sandbox.entities.items
                 else onGround = false;
             }
 
-            x += deltaX;
-            y += deltaY;
-            if (y < 0) y = 0;
-            hitBox.MoveTo((int)x, (int)y);
+            Displace(deltaX, deltaX);
         }
     }
 }

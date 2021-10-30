@@ -136,13 +136,23 @@ namespace space_planet_sandbox.world
 
             foreach (var entity in entities)
             {
-                if (entity.isActive) entity.Update(gameTime);
+                if (entity.isActive)
+                {
+                    entity.Update(gameTime);
+                    if (entity.Position().X < 0) entity.Displace(pixelWorldWidth, 0);
+                    else if (entity.Position().X > pixelWorldWidth) entity.Displace(-pixelWorldWidth, 0);
+                }
             }
             PostUpdate();
         }
 
         public void Render(SpriteBatch graphics)
         {
+            int x1 = FindParallaxPosition(SandboxGame.camera.x, 4);
+            int x2 = FindParallaxPosition(SandboxGame.camera.x, 4, 1280);
+            graphics.Draw(SandboxGame.loadedTextures["mountain_1"], new Vector2(x1, SandboxGame.camera.y / 4), Color.White);
+            graphics.Draw(SandboxGame.loadedTextures["mountain_1"], new Vector2(x2, SandboxGame.camera.y / 4), Color.White);
+
             for (int j = 0; j < 7; j++)
             {
                 int jthIndex = yChunkMain - 3 + j;
@@ -153,8 +163,16 @@ namespace space_planet_sandbox.world
                 for (int i = 0; i < 7; i++)
                 {
                     int ithIndex = xChunkMain - 3 + i;
-                    if (ithIndex < 0) ithIndex += chunkWidth;
-                    if (ithIndex >= chunkWidth) ithIndex -= chunkWidth;
+                    if (ithIndex < 0)
+                    {
+                        ithIndex += chunkWidth;
+                        chunks[ithIndex, jthIndex].Render(graphics, -pixelWorldWidth, 0);
+                    }
+                    else if (ithIndex >= chunkWidth)
+                    {
+                        ithIndex -= chunkWidth;
+                        chunks[ithIndex, jthIndex].Render(graphics, pixelWorldWidth, 0);
+                    }
                     chunks[ithIndex, jthIndex].Render(graphics);
                 }
             }
@@ -164,6 +182,8 @@ namespace space_planet_sandbox.world
                 if (entity.isActive)
                 {
                     entity.Render(graphics);
+                    if (entity.Position().X < 1280) entity.Render(graphics, pixelWorldWidth, 0);
+                    else if (entity.Position().X > pixelWorldWidth - 1280) entity.Render(graphics, -pixelWorldWidth, 0);
                 }
             }
             blockPreview.Render(graphics);
@@ -184,8 +204,8 @@ namespace space_planet_sandbox.world
         public Dictionary<String, HashSet<CollidableEntity>> GetPotentialCollisions(int x, int y, int width, int height)
         {
             Dictionary<String, HashSet<CollidableEntity>> possibleCollisions = new Dictionary<String, HashSet<CollidableEntity>>();
-            var x1Chunk = Math.Max(x / chunkPixelSize - xChunkMain + 3, 0);
-            var x2Chunk = Math.Min((x + width) / chunkPixelSize - xChunkMain + 3, 6);
+            var x1Chunk = ComputeBoundaryChunk(x) - xChunkMain + 3;
+            var x2Chunk = ComputeBoundaryChunk(x + width) - xChunkMain + 3;
             var y1Chunk = Math.Max(y / chunkPixelSize - yChunkMain + 3, 0);
             var y2Chunk = Math.Min((y + height) / chunkPixelSize - yChunkMain + 3, 6);
             for (int i = x1Chunk; i <= x2Chunk; i++)
@@ -214,6 +234,20 @@ namespace space_planet_sandbox.world
                 return chunks[xChunk, yChunk].GetTileAt(x, y);
             }
             return TileDataDictionary.GetTile("empty").Abridge();
+        }
+
+        private int FindParallaxPosition(int cameraX, float ratio, int displacement = 0)
+        {
+            int x1 = (int)(cameraX / ratio) + displacement;
+            while (x1 > cameraX + 1280)
+            {
+                x1 -= 2560;
+            }
+            while (x1 < cameraX - 1280)
+            {
+                x1 += 2560;
+            }
+            return x1;
         }
 
         private void PreUpdate()
@@ -258,17 +292,17 @@ namespace space_planet_sandbox.world
 
         private bool IsEntityActive(CollidableEntity entity)
         {
-            int leftChunk = (int)Math.Floor(entity.Position().X / chunkPixelSize);
+            int leftChunk = ComputeBoundaryChunk(entity.Position().X);
             int topChunk = (int)Math.Floor(entity.Position().Y / chunkPixelSize);
-            int rightChunk = (int)Math.Floor((entity.Position().X + entity.GetSize().X) / chunkPixelSize);
+            int rightChunk = ComputeBoundaryChunk(entity.Position().X + entity.GetSize().X);
             int bottomChunk = (int)Math.Floor((entity.Position().Y + entity.GetSize().Y) / chunkPixelSize);
             if (rightChunk >= xChunkMain - 3
                 && leftChunk <= xChunkMain + 3
                 && topChunk <= Math.Min(chunkHeight - 1, yChunkMain + 3)
                 && bottomChunk >= Math.Max(0, yChunkMain - 3))
             {
-                int leftIndex = Math.Max(leftChunk - xChunkMain + 3, 0);
-                int rightIndex = Math.Min(rightChunk - xChunkMain + 3, 6);
+                int leftIndex = leftChunk - xChunkMain + 3;
+                int rightIndex = rightChunk - xChunkMain + 3;
                 int topIndex = Math.Max(topChunk - yChunkMain + 3, 0);
                 int bottomIndex = Math.Min(bottomChunk - yChunkMain + 3, 6);
                 for (int i = leftIndex; i <= rightIndex; i++)
@@ -281,6 +315,14 @@ namespace space_planet_sandbox.world
                 return true;
             }
             return false;
+        }
+
+        private int ComputeBoundaryChunk(float xPos)
+        {
+            int chunk = (int)Math.Floor(xPos / chunkPixelSize);
+            if (xChunkMain < 3 && chunk > chunkWidth - 3) chunk -= chunkWidth;
+            else if (xChunkMain > chunkWidth - 3 && chunk < 3) chunk += chunkWidth;
+            return chunk;
         }
     }
 }

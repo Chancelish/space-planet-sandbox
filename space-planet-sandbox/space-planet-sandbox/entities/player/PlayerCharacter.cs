@@ -55,16 +55,16 @@ namespace space_planet_sandbox.entities.player
             int xCheck = (int) (xVelocity + Math.Sign(xVelocity));
             int yCheck = (int) (yVelocity + Math.Sign(yVelocity));
 
-            var tiles = ExtractByCollisionGroup(possibleCollisions, this, "tiles");
+            var tiles = ExtractByCollisionGroup(possibleCollisions, this, "tiles", "solid");
             foreach (var chunk in tiles)
             {
-                if (Collide(chunk, xCheck, 0))
+                if (Collide(chunk, xCheck, 0) || WorldWrapCollisionCheck(chunk, xCheck, 0))
                 {
                     while (xCheck != 0)
                     {
                         xCheck = xCheck > 0 ? xCheck - 1 : xCheck + 1;
                         xVelocity = xCheck;
-                        if (!Collide(chunk, xCheck, 0))
+                        if (!Collide(chunk, xCheck, 0) && !WorldWrapCollisionCheck(chunk, xCheck, 0))
                         {
                             break;
                         }
@@ -74,13 +74,13 @@ namespace space_planet_sandbox.entities.player
             }
             foreach (var chunk in tiles)
             {
-                if (Collide(chunk, 0, yCheck))
+                if (Collide(chunk, 0, yCheck) || WorldWrapCollisionCheck(chunk, 0, yCheck))
                 {
                     while (yCheck != 0)
                     {
                         yCheck = yCheck > 0 ? yCheck - 1 : yCheck + 1;
                         yVelocity = yCheck;
-                        if (!Collide(chunk, 0, yCheck))
+                        if (!(Collide(chunk, 0, yCheck) || WorldWrapCollisionCheck(chunk, 0, yCheck)))
                         {
                             break;
                         }
@@ -105,13 +105,10 @@ namespace space_planet_sandbox.entities.player
                 }
             }
 
-            x += (float) xVelocity;
-            y += (float) yVelocity;
-            if (y < 0) y = 0;
-            hurtBox.MoveTo((int) x, (int) y);
+            Displace((float) xVelocity, (float) yVelocity);
         }
 
-        public override void Render(SpriteBatch graphics)
+        public override void Render(SpriteBatch graphics, float xDisplacement = 0, float yDisplacement = 0)
         {
             if (boxOutline == null)
             {
@@ -169,7 +166,6 @@ namespace space_planet_sandbox.entities.player
                 lookingRight = true;
                 // gotta look where ya going!
             }
-                
         }
     }
 }

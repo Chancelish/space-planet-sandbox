@@ -39,6 +39,18 @@
 /processorParam:TextureFormat=Compressed
 /build:dialog.spritefont
 
+#begin dirt.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:dirt.png
+
 #begin forbidden_x.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -135,7 +147,7 @@
 /processorParam:TextureFormat=Color
 /build:mining_overlay.png
 
-#begin pink_mountain_bg.png
+#begin mountain_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -145,7 +157,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:pink_mountain_bg.png
+/build:mountain_1.png
 
 #begin rustic_brick_blue.png
 /importer:TextureImporter
