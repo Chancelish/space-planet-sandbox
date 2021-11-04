@@ -21,7 +21,7 @@ namespace space_planet_sandbox.entities.items
         {
             maxStack = 1;
             quantity = 1;
-            miningPower = 2.5f;
+            miningPower = 4f;
             attackPower = 2f;
             icon = SandboxGame.loadedTextures["temppickaxeicon"];
             usable = true;

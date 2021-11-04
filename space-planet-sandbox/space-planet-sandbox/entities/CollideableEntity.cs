@@ -37,7 +37,7 @@ namespace space_planet_sandbox.entities
         {
             x += _x;
             y += _y;
-            if (y < 0) y = 0;
+            if (y < 0f) y = 0f;
             GetCollisionMask().MoveTo((int) x, (int) y);
         }
 

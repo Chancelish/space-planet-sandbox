@@ -139,8 +139,8 @@ namespace space_planet_sandbox.world
                 if (entity.isActive)
                 {
                     entity.Update(gameTime);
-                    if (entity.Position().X < 0) entity.Displace(pixelWorldWidth, 0);
-                    else if (entity.Position().X > pixelWorldWidth) entity.Displace(-pixelWorldWidth, 0);
+                    if (entity.Position().X < 0) entity.Displace(pixelWorldWidth, 0f);
+                    else if (entity.Position().X > pixelWorldWidth) entity.Displace(-pixelWorldWidth, 0f);
                 }
             }
             PostUpdate();

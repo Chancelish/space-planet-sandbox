@@ -72,6 +72,13 @@ namespace space_planet_sandbox
             LoadTexture("menu_frame_condensed");
             LoadTexture("mining_overlay");
             LoadTexture("mountain_1");
+            LoadTexture("to_planet");
+            LoadTexture("to_ship");
+
+            var whitePixel = new Texture2D(graphics.GraphicsDevice, 1, 1);
+            whitePixel.SetData(new[] { Color.White });
+
+            loadedTextures.Add("white_pixel", whitePixel);
 
             TextUtils.LoadFonts(Content);
 
