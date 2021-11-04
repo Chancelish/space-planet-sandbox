@@ -18,6 +18,7 @@ namespace space_planet_sandbox.entities.player
         public double cooldown;
         public float lastFrameTime { get; private set; }
         private bool lookingRight = false;
+        private float gravity = 1;
 
         private PlayerInventory inventory;
 
@@ -45,7 +46,7 @@ namespace space_planet_sandbox.entities.player
             var possibleCollisions = myWorld.GetPotentialCollisions((int) x, (int) y, hurtBox.Size().X, hurtBox.Size().Y);
 
             xVelocity = 0;
-            yVelocity = 0;
+            yVelocity = 0 + gravity;
 
             if (SandboxGame.gui.guiState != gui.GuiState.OptionsMenu)
             {
