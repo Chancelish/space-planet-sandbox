@@ -49,19 +49,52 @@ namespace space_planet_sandbox.world
             pixelWorldWidth = tileWorldWidth * tileSize;
             pixelWorldHeight = tileWorldHeight * tileSize;
 
-            player = new PlayerCharacter(640, 50);
+            blockPreview = new BlockPreview(tileSize);
+            blockPreview.SetWorld(this);
+
+            Initialize();
+        }
+
+        public World(int width, int height, int size, bool isShip)
+        {
+            chunkWidth = width;
+            chunkHeight = height;
+            chunkSize = size;
+            tileSize = 16;
+            chunkPixelSize = (chunkSize * tileSize);
+
+            tileWorldWidth = width * size;
+            tileWorldHeight = height * size;
+
+            pixelWorldWidth = tileWorldWidth * tileSize;
+            pixelWorldHeight = tileWorldHeight * tileSize;
+
+            Initialize();
+            if (isShip)
+            {
+                AddEntity(new Ship("human", 0));
+                SandboxGame.gui.SetWarpButton(SandboxGame.loadedTextures["to_world"]);
+                player.Displace(-player.Position().X, -player.Position().Y);
+            }
+            else
+            {
+                SandboxGame.gui.SetWarpButton(SandboxGame.loadedTextures["to_ship"]);
+            }
+        }
+
+        private void Initialize()
+        {
             blockPreview = new BlockPreview(tileSize);
             blockPreview.SetWorld(this);
 
             entities = new List<CollidableEntity>();
             entitiesToAdd = new HashSet<CollidableEntity>();
-            AddEntity(player);
 
-            chunks = new TileMap[width, height];
+            chunks = new TileMap[chunkWidth, chunkHeight];
 
             activeRegion = new List<CollidableEntity>[7, 7];
 
-            for (int ix = 0; ix < 7; ix ++)
+            for (int ix = 0; ix < 7; ix++)
             {
                 for (int iy = 0; iy < 7; iy++)
                 {
@@ -69,15 +102,19 @@ namespace space_planet_sandbox.world
                 }
             }
 
-            for (int ix = 0; ix < width; ix++)
+            for (int ix = 0; ix < chunkWidth; ix++)
             {
-                for (int iy = 0; iy < height; iy++)
+                for (int iy = 0; iy < chunkHeight; iy++)
                 {
-                    chunks[ix, iy] = new TileMap(tileSize, size, size, ix * size * tileSize, iy * size * tileSize);
+                    chunks[ix, iy] = new TileMap(tileSize, chunkSize, chunkSize, ix * chunkSize * tileSize, iy * chunkSize * tileSize);
                     chunks[ix, iy].SetWorld(this);
                 }
             }
+
+            player = new PlayerCharacter(640, 150);
+            AddEntity(player);
         }
+
 
         public bool IsPlacementBlocked()
         {
@@ -150,8 +187,8 @@ namespace space_planet_sandbox.world
         {
             int x1 = FindParallaxPosition(SandboxGame.camera.x, 4);
             int x2 = FindParallaxPosition(SandboxGame.camera.x, 4, 1280);
-            graphics.Draw(SandboxGame.loadedTextures["mountain_1"], new Vector2(x1, SandboxGame.camera.y / 4), Color.White);
-            graphics.Draw(SandboxGame.loadedTextures["mountain_1"], new Vector2(x2, SandboxGame.camera.y / 4), Color.White);
+            graphics.Draw(SandboxGame.loadedTextures["mountain_1"], new Vector2(x1, 160 + SandboxGame.camera.y / 4), Color.White);
+            graphics.Draw(SandboxGame.loadedTextures["mountain_1"], new Vector2(x2, 160 + SandboxGame.camera.y / 4), Color.White);
 
             for (int j = 0; j < 7; j++)
             {

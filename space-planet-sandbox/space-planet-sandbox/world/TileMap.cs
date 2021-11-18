@@ -39,12 +39,11 @@ namespace space_planet_sandbox.world
             biomeThreshold = 2 * (width + height);
             collisionGroup = "tiles";
 
-            Random tileChooser = new Random();
             for (int ix = 0; ix < width; ix++)
             {
                 for (int iy = 0; iy < height; iy++)
                 {
-                    if ((iy * 16) + yOrigin < 640)
+                    if ((iy * 16) + yOrigin < 1280)
                     {
                         tileData[ix, iy] = TileDataDictionary.GetTile(EMPTY).Abridge();
                     }

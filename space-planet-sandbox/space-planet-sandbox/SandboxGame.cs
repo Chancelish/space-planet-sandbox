@@ -72,6 +72,7 @@ namespace space_planet_sandbox
             LoadTexture("menu_frame_condensed");
             LoadTexture("mining_overlay");
             LoadTexture("mountain_1");
+            LoadTexture("small_ship");
             LoadTexture("to_planet");
             LoadTexture("to_ship");
 
