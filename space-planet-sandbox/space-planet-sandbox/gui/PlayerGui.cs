@@ -60,6 +60,7 @@ namespace space_planet_sandbox.gui
                 case GuiState.Basic:
                     inventoryGui.Update();
                     clicked = inventoryGui.clicked || InputUtils.GetMouseScreenPosition().Y > 640;
+                    WarpClicked();
                     if (InputUtils.GetKeyPressed("escape"))
                     {
                         guiState = GuiState.OptionsMenu;
@@ -69,6 +70,7 @@ namespace space_planet_sandbox.gui
                 case GuiState.Inventory:
                     inventoryGui.Update();
                     clicked = inventoryGui.clicked || InputUtils.GetMouseScreenPosition().Y > 640;
+                    WarpClicked();
                     if (!inventoryGui.isOpen) guiState = GuiState.Basic;
                     break;
             }
@@ -101,6 +103,19 @@ namespace space_planet_sandbox.gui
         public void SetWarpButton(Texture2D image)
         {
             warpButton = image;
+        }
+
+        public void WarpClicked()
+        {
+            if (InputUtils.LeftMouseClicked)
+            {
+                var cursor = InputUtils.GetMouseScreenPosition();
+                if (cursor.X > warpButtonPosition.X && cursor.X < warpButtonPosition.X + 24 && cursor.Y > warpButtonPosition.Y && cursor.Y < warpButtonPosition.Y + 24)
+                {
+                    if (warpButton.Equals(SandboxGame.loadedTextures["to_ship"])) SandboxGame.GoToWorld(new world.World(7, 7, 32, true));
+                    else SandboxGame.GoToWorld(new world.World(100, 20, 32));
+                }
+            }
         }
     }
 }

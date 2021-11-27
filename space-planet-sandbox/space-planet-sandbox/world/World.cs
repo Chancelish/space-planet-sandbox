@@ -49,10 +49,11 @@ namespace space_planet_sandbox.world
             pixelWorldWidth = tileWorldWidth * tileSize;
             pixelWorldHeight = tileWorldHeight * tileSize;
 
-            blockPreview = new BlockPreview(tileSize);
-            blockPreview.SetWorld(this);
-
             Initialize();
+
+            player = new PlayerCharacter(640, 150);
+            AddEntity(player);
+            SandboxGame.gui.SetWarpButton(SandboxGame.loadedTextures["to_ship"]);
         }
 
         public World(int width, int height, int size, bool isShip)
@@ -73,12 +74,16 @@ namespace space_planet_sandbox.world
             if (isShip)
             {
                 AddEntity(new Ship("human", 0));
-                SandboxGame.gui.SetWarpButton(SandboxGame.loadedTextures["to_world"]);
-                player.Displace(-player.Position().X, -player.Position().Y);
+                player = new PlayerCharacter(0, 0);
+                AddEntity(player);
+                SandboxGame.gui.SetWarpButton(SandboxGame.loadedTextures["to_planet"]);
+                player.Displace(16 * 32 + 48, 16 * 32 + 64);
             }
             else
             {
                 SandboxGame.gui.SetWarpButton(SandboxGame.loadedTextures["to_ship"]);
+                player = new PlayerCharacter(640, 150);
+                AddEntity(player);
             }
         }
 
@@ -110,9 +115,6 @@ namespace space_planet_sandbox.world
                     chunks[ix, iy].SetWorld(this);
                 }
             }
-
-            player = new PlayerCharacter(640, 150);
-            AddEntity(player);
         }
 
 

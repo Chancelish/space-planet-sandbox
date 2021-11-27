@@ -25,7 +25,7 @@ namespace space_planet_sandbox
         private RenderTarget2D actionLayer;
         private RenderTarget2D guiLayer;
 
-        private World testWorld;
+        private static World activeWorld;
 
         public SandboxGame()
         {
@@ -50,7 +50,7 @@ namespace space_planet_sandbox
             var menuBackDrop = new Texture2D(graphics.GraphicsDevice, 1, 1);
 
             gui = new PlayerGui(new OptionsMenu(menuBackDrop, new ControlsMenu(Window, menuBackDrop)));
-            testWorld = new World(70, 20, 32);
+            activeWorld = new World(70, 20, 32);
         }
 
         protected override void LoadContent()
@@ -87,6 +87,11 @@ namespace space_planet_sandbox
             guiLayer = new RenderTarget2D(GraphicsDevice, 1280, 720);
         }
 
+        public static void GoToWorld(World world)
+        {
+            activeWorld = world;
+        }
+
         private void LoadTexture(string textureName)
         {
             SandboxGame.loadedTextures.Add(textureName, Content.Load<Texture2D>(textureName));
@@ -99,7 +104,7 @@ namespace space_planet_sandbox
             InputUtils.PreUdate();
 
             gui.Update();
-            testWorld.Update(gameTime);
+            activeWorld.Update(gameTime);
 
             base.Update(gameTime);
 
@@ -114,7 +119,7 @@ namespace space_planet_sandbox
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, transformMatrix: camera.Transform);
 
-            testWorld.Render(spriteBatch);
+            activeWorld.Render(spriteBatch);
 
             spriteBatch.End();
 
