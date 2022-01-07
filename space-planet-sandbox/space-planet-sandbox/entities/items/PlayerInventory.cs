@@ -27,7 +27,7 @@ namespace space_planet_sandbox.entities.items
         private int selectedItem;
         private Texture2D hotbarSprite;
 
-        private int hotbarX = 480;
+        private int hotbarX = 320;
         private int hotbarY = 660;
 
         public PlayerInventory()
@@ -129,7 +129,7 @@ namespace space_planet_sandbox.entities.items
         {
             for (int i = 0; i < 10; i++)
             {
-                var xi = hotbarX + 32 * i;
+                var xi = hotbarX + 64 * i;
                 var location = new Vector2(xi, hotbarY);
                 var color = i == selectedItem ? Color.LimeGreen : Color.White;
                 graphics.Draw(hotbarSprite, location, null, color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
@@ -140,7 +140,7 @@ namespace space_planet_sandbox.entities.items
                     itemsOnHotbar[i].Render(graphics, xi, hotbarY);
                 }
 
-                TextUtils.RenderOutlinedText(graphics, TextUtils.defaultFont, label, hotbarX + 22 + 32 * i, hotbarY + 18);
+                TextUtils.RenderOutlinedText(graphics, TextUtils.defaultFont, label, hotbarX + 22 + 64 * i, hotbarY + 18);
             }
         }
 
@@ -154,7 +154,7 @@ namespace space_planet_sandbox.entities.items
                 if (InputUtils.LeftMouseClicked)
                 {
                     var mouseLocation = InputUtils.GetMouseScreenPosition();
-                    var xi = (hotbarX + 32 * i);
+                    var xi = (hotbarX + 64 * i);
                     if (mouseLocation.X > xi && mouseLocation.X < xi + 32 && mouseLocation.Y > hotbarY && mouseLocation.Y < hotbarY + 32)
                     {
                         selectedItem = i;

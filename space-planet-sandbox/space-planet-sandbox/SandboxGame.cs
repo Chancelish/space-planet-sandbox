@@ -25,7 +25,7 @@ namespace space_planet_sandbox
         private RenderTarget2D actionLayer;
         private RenderTarget2D guiLayer;
 
-        private World testWorld;
+        private static World activeWorld;
 
         public SandboxGame()
         {
@@ -50,7 +50,7 @@ namespace space_planet_sandbox
             var menuBackDrop = new Texture2D(graphics.GraphicsDevice, 1, 1);
 
             gui = new PlayerGui(new OptionsMenu(menuBackDrop, new ControlsMenu(Window, menuBackDrop)));
-            testWorld = new World(70, 20, 32);
+            activeWorld = new World(70, 20, 32);
         }
 
         protected override void LoadContent()
@@ -72,11 +72,24 @@ namespace space_planet_sandbox
             LoadTexture("menu_frame_condensed");
             LoadTexture("mining_overlay");
             LoadTexture("mountain_1");
+            LoadTexture("small_ship");
+            LoadTexture("to_planet");
+            LoadTexture("to_ship");
+
+            var whitePixel = new Texture2D(graphics.GraphicsDevice, 1, 1);
+            whitePixel.SetData(new[] { Color.White });
+
+            loadedTextures.Add("white_pixel", whitePixel);
 
             TextUtils.LoadFonts(Content);
 
             actionLayer = new RenderTarget2D(GraphicsDevice, 1280, 720);
             guiLayer = new RenderTarget2D(GraphicsDevice, 1280, 720);
+        }
+
+        public static void GoToWorld(World world)
+        {
+            activeWorld = world;
         }
 
         private void LoadTexture(string textureName)
@@ -91,7 +104,7 @@ namespace space_planet_sandbox
             InputUtils.PreUdate();
 
             gui.Update();
-            testWorld.Update(gameTime);
+            activeWorld.Update(gameTime);
 
             base.Update(gameTime);
 
@@ -106,7 +119,7 @@ namespace space_planet_sandbox
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, transformMatrix: camera.Transform);
 
-            testWorld.Render(spriteBatch);
+            activeWorld.Render(spriteBatch);
 
             spriteBatch.End();
 

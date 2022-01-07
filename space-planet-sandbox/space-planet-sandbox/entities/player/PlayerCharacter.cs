@@ -18,8 +18,8 @@ namespace space_planet_sandbox.entities.player
         public double cooldown;
         public float lastFrameTime { get; private set; }
         private bool lookingRight = false;
+        private float gravity = 1;
 
-        private Texture2D boxOutline;
         private PlayerInventory inventory;
 
         public PlayerCharacter(int startX, int startY)
@@ -46,7 +46,7 @@ namespace space_planet_sandbox.entities.player
             var possibleCollisions = myWorld.GetPotentialCollisions((int) x, (int) y, hurtBox.Size().X, hurtBox.Size().Y);
 
             xVelocity = 0;
-            yVelocity = 0;
+            yVelocity = 0 + gravity;
 
             if (SandboxGame.gui.guiState != gui.GuiState.OptionsMenu)
             {
@@ -111,12 +111,7 @@ namespace space_planet_sandbox.entities.player
 
         public override void Render(SpriteBatch graphics, float xDisplacement = 0, float yDisplacement = 0)
         {
-            if (boxOutline == null)
-            {
-                boxOutline = new Texture2D(graphics.GraphicsDevice, 1, 1);
-                boxOutline.SetData(new[] { Color.White });
-            }
-            graphics.Draw(boxOutline, new Rectangle((int) x, (int) y, 16, 32), Color.LightGreen);
+            graphics.Draw(SandboxGame.loadedTextures["white_pixel"], new Rectangle((int) x, (int) y, 16, 32), Color.LightGreen);
 
             graphics.Draw(sprite,
                 new Vector2(x, y),

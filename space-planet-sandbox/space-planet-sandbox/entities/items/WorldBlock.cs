@@ -83,7 +83,7 @@ namespace space_planet_sandbox.entities.items
             graphics.Draw(icon, new Vector2(x + xDisplacement, y + yDisplacement), cornerOfTexture, Color.White);
             if (associatedItem.quantity > 1)
             {
-                graphics.Draw(icon, new Vector2(x - 3, y - 3), cornerOfTexture, Color.White);
+                graphics.Draw(icon, new Vector2(x + xDisplacement  - 3, y + yDisplacement - 3), cornerOfTexture, Color.White);
             }
         }
 

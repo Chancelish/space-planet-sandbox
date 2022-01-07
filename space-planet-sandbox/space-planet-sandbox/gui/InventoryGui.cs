@@ -63,7 +63,7 @@ namespace space_planet_sandbox.gui
             if (InputUtils.LeftMouse)
             {
                 var mousePosition = InputUtils.GetMouseScreenPosition();
-                clicked = MouseInItemGrid(mousePosition) || MouseOverHotbar(mousePosition) || grabbedIndex != -1;
+                clicked = MouseInItemGrid(mousePosition) || grabbedIndex != -1;
             }
         }
 
@@ -110,7 +110,7 @@ namespace space_planet_sandbox.gui
                 }
                 for (int i = 0; i < 10; i++)
                 {
-                    var xi = (480 + 32 * i);
+                    var xi = (320 + 64 * i);
                     if (mousePosition.X > xi && mousePosition.X < xi + 32 && mousePosition.Y > 660 && mousePosition.Y < 692) inventory.PlaceOnHotbar(i, grabbedItem);
                 }
                 grabbedItem = null;
@@ -129,11 +129,6 @@ namespace space_planet_sandbox.gui
         private bool MouseInItemGrid(Point mousePosition)
         {
             return mousePosition.X > position.X && mousePosition.Y > position.Y + 16 && mousePosition.X < position.X + 320 && mousePosition.Y < position.Y + 208 && isOpen;
-        }
-
-        private bool MouseOverHotbar(Point mousePosition)
-        {
-            return mousePosition.X > 480 && mousePosition.Y > 660 && mousePosition.X < 800 && mousePosition.Y < 692;
         }
     }
 }
